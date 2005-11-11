@@ -1,0 +1,172 @@
+<project name="WebGenomeIntegration" default="assemble-service" basedir=".">
+    <property file="buildRBT.properties"/>
+
+    <!-- compile webGenome service source -->
+    <target name="compileWebGenomeSrv" depends="build-rbt">
+        <javac srcdir="${webGenome.source.dir}" destdir="${webGenome.build.dir}" source="1.5" debug="true">
+            <classpath>
+                <fileset dir="${rbt.build.dir}">
+                    <include name="${rbt.app.jar.name}.jar"/>
+                </fileset>
+                <fileset dir="${jboss.lib.dir}">
+                    <include name="jboss-j2ee.jar"/>
+                    <include name="log4j.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- jar webGenome service -->
+    <target name="build-service" depends="compileWebGenomeSrv">
+        <delete file="${webGenome.build.dir}\${service.system.name}.jar"/>
+        <jar destfile="${webGenome.build.dir}\${service.system.name}.jar" duplicate="preserve">
+              <manifest>
+                <attribute name="Created-By" value="Ant"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+              </manifest>
+              <zipfileset dir="${webGenome.build.dir}" prefix="">
+              </zipfileset>
+              <zipfileset file="${webGenome.root}/META-INF/ejb-jar.xml" prefix="META-INF"/>
+              <zipfileset file="${webGenome.root}/META-INF/jboss.xml" prefix="META-INF"/>
+              <zipfileset file="${webGenome.root}/META-INF/jbosscmp-jdbc.xml" prefix="META-INF"/>
+     </jar>
+    </target>
+
+    <!-- compile Rembrandt (caIntegrator) code -->
+    <target name="compile-rbt" depends="build-spec">
+        <delete dir="${rbt.build.classes.dir}"/>
+        <mkdir dir="${rbt.build.classes.dir}" />
+        <javac srcdir="${rbt.source.dir}" destdir="${rbt.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
+         <classpath>
+              <fileset dir="${spec.build.dir}">
+                <include name="${spec.app.jar.name}.jar"/>
+              </fileset>
+              <fileset dir="${rbt.source.lib.dir}">
+                 <include name="*.jar"/>
+               </fileset>
+               <fileset dir="${rbt.source.nondeploy.lib.dir}">
+                 <include name="*.jar"/>
+               </fileset>
+             <fileset dir="${jboss.lib.dir}">
+                <include name="jboss-j2ee.jar"/>
+             </fileset>
+         </classpath>
+        </javac>
+    </target>
+
+    <target name="build-rbt" depends="config-database, compile-rbt">
+        <delete file="${rbt.build.dir}\${rbt.app.jar.name}.jar"/>
+        <jar jarfile="${rbt.build.dir}\${rbt.app.jar.name}.jar">
+              <fileset dir="${rbt.build.classes.dir}"></fileset>
+              <fileset dir="${rbt.build.classes.dir}">
+                <exclude name="**/web/**"/>
+             </fileset>
+
+              <fileset dir="${rbt.source.dir}">
+                       <include name="repository*"/>
+                       <include name="deToBeanAttrMappings.xml"/>
+              </fileset>
+              <fileset dir="${webGenome.source.dir}">
+                      <include name="OJB.properties"/>
+              </fileset>
+         </jar>
+    </target>
+
+    <!-- build caintegrator-spec project as a jar file -->
+    <target name="build-spec">
+        <delete dir="${spec.build.classes.dir}"/>
+		<mkdir dir="${spec.build.classes.dir}" />
+		<javac srcdir="${spec.source.dir}" destdir="${spec.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
+		 <classpath>
+		      <fileset dir="${spec.source.lib.dir}">
+			        <include name="*.jar"/>
+		      </fileset>
+		      <fileset dir="${spec.source.nondeploy.lib.dir}">
+			        <include name="*.jar"/>
+		      </fileset>
+		 </classpath>
+		</javac>
+        <delete file="${spec.build.dir}\${spec.app.jar.name}.jar" />
+		<jar jarfile="${spec.build.dir}\${spec.app.jar.name}.jar">
+              <fileset dir="${spec.build.classes.dir}"></fileset>
+               <fileset dir="${spec.source.lib.dir}">
+                   <include name="*.jar"/>
+               </fileset>
+         </jar>
+    </target>
+
+    <!-- put the final service together -->
+     <target name="assemble-service" depends="build-rbt">
+         <delete file="${webGenome.build.dir}\${integration.name}.jar"/>
+         <jar destfile="${webGenome.build.dir}\${integration.name}.jar" duplicate="preserve">
+              <manifest>
+                <attribute name="Class-Path" value="commons-collections.jar commons-dbcp.jar commons-lang-2.0.jar commons-pool.jar db-ojb-1.0.rc7.jar jcs.jar jdo.jar jdori.jar oracle.jar RBT.jar"/>
+                <attribute name="Created-By" value="Ant"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+              </manifest>
+
+              <!-- 1. include ojb jars -->
+              <fileset dir="${rbt.source.lib.dir}">
+                  <include name="commons-collections.jar"/>
+                  <include name="commons-dbcp.jar"/>
+                  <include name="commons-lang-2.0.jar"/>
+                  <include name="commons-pool.jar"/>
+                  <include name="db-ojb-1.0.rc7.jar"/>
+                  <include name="jcs.jar"/>
+                  <include name="jdo.jar"/>
+                  <include name="jdori.jar"/>
+                  <include name="oracle.jar"/>
+              </fileset>
+
+             <!-- 2. include Rembrandt code base -->
+             <fileset dir="${rbt.build.dir}">
+                  <include name="${rbt.app.jar.name}.jar"/>
+             </fileset>
+
+             <!-- 3. include ejbs -->
+             <fileset dir="${webGenome.build.dir}">
+                  <include name="${service.system.name}.jar"/>
+             </fileset>
+
+          </jar>
+     </target>
+
+     <target name="config-database" depends="">
+            <delete file="${rbt.source.dir}/repository_database.xml"/>
+            <copy file="${rbt.source.dir}/repository_database.xml.template" tofile="${rbt.source.dir}/repository_database.xml"/>
+            <replaceregexp file = "${rbt.source.dir}/repository_database.xml" match="__DB_USER__" replace="${databaseUser}" flags="g"/>
+            <replaceregexp file = "${rbt.source.dir}/repository_database.xml" match="__URL_DB_ALIAS__" replace="${urlDbalias}" flags="g"/>
+            <replaceregexp file = "${rbt.source.dir}/repository_database.xml" match="__DB_PASSWD__" replace="${databasePassword}" flags="g"/>
+     </target>
+
+
+    <!-- cvs checkout related -->
+    <target name="cvs-login" unless="cvs.login.present">
+		<echoproperties prefix="cvs" />
+		<available file="${basedir}/.cvspass" type="file" property="cvs.login.present" />
+		<delete file="${basedir}/.cvspass" />
+		<input message="Please enter CVS password for user ${cvsUser}:" addproperty="cvsPassword" />
+		<condition property="noCVSPassword">
+			<equals arg1="" arg2="${cvsPassword}" />
+		</condition>
+		<fail if="noCVSPassword">You did not enter your CVS password.</fail>
+		<cvspass cvsRoot="${cvsRoot}" password="${cvsPassword}" passfile="${basedir}/.cvspass" />
+	</target>
+	<target name="check-cvs-login">
+		<available file="${basedir}/.cvspass" type="file" property="cvs.login.present" />
+		<echoproperties prefix="cvs.login.present" />
+	</target>
+
+    <!-- checkout caIntegrator-spec-->
+	<target name="spec-cvs-checkout" depends="check-cvs-login, cvs-login">
+		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${caIntegratorCheckoutRoot}" command="checkout" passfile="${basedir}/.cvspass" />
+	</target>
+
+    <!-- checkout Rembrandt(really caIntegrator) -->
+	<target name="rbt-cvs-checkout" depends="spec-cvs-checkout">
+		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${caIntegratorCheckoutRoot}" command="checkout" passfile="${basedir}/.cvspass" />
+	</target>
+
+    <target name="caIntegrator-checkout" depends="rbt-cvs-checkout"/>
+
+</project>
