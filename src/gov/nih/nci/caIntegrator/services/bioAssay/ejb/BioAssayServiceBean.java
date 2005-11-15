@@ -100,7 +100,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
              ServiceLocator locator = ServiceLocator.getInstance();
              Object h = locator.locateHome(null, RBTApplicationStateTrackerHome.JNDI_NAME,
                                              ApplicationStateTrackerHome.class);
-             ApplicationStateTrackerHome home = (RBTApplicationStateTrackerHome)h;
+             ApplicationStateTrackerHome home = (ApplicationStateTrackerHome)h;
              ApplicationStateTracker  service = home.create();
              return service;
         } catch (NamingException ne) {
