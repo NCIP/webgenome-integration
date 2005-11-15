@@ -1,5 +1,7 @@
 package gov.nih.nci.caIntegrator.services.appState.ejb;
 
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTrackerHome;
+
 import javax.ejb.EJBHome;
 import javax.ejb.CreateException;
 import java.rmi.RemoteException;
@@ -11,7 +13,6 @@ import java.rmi.RemoteException;
  * Time: 2:15:03 AM
  */
 
-public interface RBTApplicationStateTrackerHome extends EJBHome {
+public interface RBTApplicationStateTrackerHome extends ApplicationStateTrackerHome,EJBHome {
     public static String JNDI_NAME="ReportStateTrackerService";
-    RBTApplicationStateTracker create() throws RemoteException, CreateException;
 }
