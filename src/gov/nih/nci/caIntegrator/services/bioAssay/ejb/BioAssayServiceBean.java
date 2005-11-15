@@ -15,6 +15,8 @@ import gov.nih.nci.caIntegrator.services.util.ServiceLocator;
 import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome;
 import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTracker;
 import gov.nih.nci.caIntegrator.services.appState.dto.RBTReportStateDTO;
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTrackerHome;
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTracker;
 import gov.nih.nci.rembrandt.util.ApplicationContext;
 
 import java.util.HashMap;
@@ -63,7 +65,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         assert (service != null);
 
         // retrieve the report state that got saved earlier for this clientID
-        RBTApplicationStateTracker stateService = getAppStateTrackerService();
+        ApplicationStateTracker stateService = getAppStateTrackerService();
         RBTReportStateDTO state = null;
         try {
             Integer stateID = new Integer(clientID);
@@ -93,13 +95,13 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         return exptDTO;
     }
 
-    private RBTApplicationStateTracker getAppStateTrackerService() throws Exception {
+    private ApplicationStateTracker getAppStateTrackerService() throws Exception {
         try {
              ServiceLocator locator = ServiceLocator.getInstance();
              Object h = locator.locateHome(null, RBTApplicationStateTrackerHome.JNDI_NAME,
-                                             RBTApplicationStateTrackerHome.class);
-             RBTApplicationStateTrackerHome home = (RBTApplicationStateTrackerHome)h;
-             RBTApplicationStateTracker  service = home.create();
+                                             ApplicationStateTrackerHome.class);
+             ApplicationStateTrackerHome home = (RBTApplicationStateTrackerHome)h;
+             ApplicationStateTracker  service = home.create();
              return service;
         } catch (NamingException ne) {
              ne.printStackTrace();
