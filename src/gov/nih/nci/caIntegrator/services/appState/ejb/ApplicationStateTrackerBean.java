@@ -3,6 +3,7 @@ package gov.nih.nci.caIntegrator.services.appState.ejb;
 import gov.nih.nci.caIntegrator.services.bioAssay.ejb.AbstractServiceBean;
 import gov.nih.nci.caIntegrator.services.appState.ApplicationStateService;
 import gov.nih.nci.caIntegrator.services.appState.TrackableAppState;
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTracker;
 
 import javax.ejb.CreateException;
 
@@ -14,7 +15,7 @@ import javax.ejb.CreateException;
  * Time: 2:15:03 AM
  */
 
-public class ApplicationStateTrackerBean extends AbstractServiceBean  {
+public class ApplicationStateTrackerBean extends AbstractServiceBean implements ApplicationStateTracker {
 
     private static org.apache.log4j.Logger logger_ =
         org.apache.log4j.Logger.getLogger(ApplicationStateTrackerBean .class);
