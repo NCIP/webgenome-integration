@@ -17,7 +17,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
    <appender name="WEBGENOME_FILE" class="org.apache.log4j.DailyRollingFileAppender">
-      <param name="File" value="D:/jboss-4.0.2/server/default/log//service.log"/>
+      <param name="File" value="${jboss.server.home.dir}/log/bioAssayService.log"/>
       <param name="Append" value="true"/>
 
  
@@ -46,6 +46,33 @@
    <!-- ================ -->
    <!-- Limit categories -->
    <!-- ================ -->
+    <!-- Default logger for Rembrandt. Used where no logger is declared -->
+    <logger name="gov.nih.nci.rembrandt" additivity="false">
+            <level value="ERROR"/>
+            <appender-ref ref="WEBGENOME_FILE"/>
+            <appender-ref ref="WEBGENOME_CONSOLE"/>
+   </logger>
+
+    <logger name="gov.nih.nci.caintegrator" additivity="false">
+            <level value="ERROR"/>
+            <appender-ref ref="WEBGENOME_FILE"/>
+            <appender-ref ref="WEBGENOME_CONSOLE"/>
+   </logger>
+   
+   
+    <!-- Specific loggers for caIntegrator & Rembrandt.--> 
+    <logger name="gov.nih.nci.rembrandt.queryservice" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="WEBGENOME_FILE"/>
+        <appender-ref ref="WEBGENOME_CONSOLE"/>
+   </logger>
+   <logger name="gov.nih.nci.rembrandt.util.ThreadPool" additivity="false">
+           <level value="DEBUG"/>
+           <appender-ref ref="WEBGENOME_FILE"/>
+           <appender-ref ref="WEBGENOME_CONSOLE"/>
+   </logger>
+   
+   
    
    <!-- Default logger for WebGenome. Used where no logger is declared -->
    <logger name="gov.nih.nci.caIntegrator.services" additivity="false">
@@ -54,22 +81,6 @@
      <appender-ref ref="WEBGENOME_CONSOLE"/>
    </logger>
 
-   <logger name="gov.nih.nci.caIntegrator.services.appState" additivity="false">
-     <level value="DEBUG"/>
-     <appender-ref ref="WEBGENOME_FILE"/>
-     <appender-ref ref="WEBGENOME_CONSOLE"/>
-    </logger>
-
-   <logger name="gov.nih.nci.caIntegrator.services.appState.ejb" additivity="false">
-     <level value="DEBUG"/>
-     <appender-ref ref="WEBGENOME_FILE"/>
-     <appender-ref ref="WEBGENOME_CONSOLE"/>
-   </logger>
-   <logger name="gov.nih.nci.caIntegrator.services.util" additivity="false">
-     <level value="DEBUG"/>
-     <appender-ref ref="WEBGENOME_FILE"/>
-     <appender-ref ref="WEBGENOME_CONSOLE"/>
-   </logger>
    <!-- Default logger for OJB. Used where no logger is declared -->
    <logger name="org.apache.ojb" additivity="false">
      <level value="ERROR"/>
@@ -140,5 +151,4 @@
    </logger>
 
  
-  
 </log4j:configuration>
