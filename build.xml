@@ -192,11 +192,10 @@
                 <fileset dir="${webGenome.build.classes.dir}">
                             <include name="**/appState/dto/*.class"/>
                             <include name="**/appState/ejb/*.class"/>
-                            <exclude name="**/appState/ejb/*Bean.class"/>
                             <include name="**/appState/TrackableAppState.class"/>
+                            <include name="**/appState/ApplicationStateTracker.class"/>
                             <include name="**/services/util/ServiceLocator.class"/>
                 </fileset>
-                <!-- <fileset file="${JNDIPropertiesFile}"/> -->
             </jar>
      </target>
      <target name="buildWebGenomeClient" depends="compileWebGenomeSrv">
