@@ -30,7 +30,7 @@
         <session>
             <display-name>Report State Tracker</display-name>
             <ejb-name>ReportStateTrackerService</ejb-name>
-            <home>gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome</home>
+            <home>gov.nih.nci.caIntegrator.services.appState.ApplicationStateTrackerHome</home>
             <remote>gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTracker</remote>
             <local-home>gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerLocalHome</local-home>
             <local>gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerLocal</local>

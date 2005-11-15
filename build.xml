@@ -194,6 +194,7 @@
                             <include name="**/appState/ejb/*.class"/>
                             <include name="**/appState/TrackableAppState.class"/>
                             <include name="**/appState/ApplicationStateTracker.class"/>
+                            <include name="**/appState/ApplicationStateTrackerHome.class"/>
                             <include name="**/services/util/ServiceLocator.class"/>
                 </fileset>
             </jar>
