@@ -14,4 +14,5 @@ import java.rmi.RemoteException;
  */
 public interface RBTApplicationStateTracker extends  ApplicationStateTracker, EJBObject {
 
+
 }

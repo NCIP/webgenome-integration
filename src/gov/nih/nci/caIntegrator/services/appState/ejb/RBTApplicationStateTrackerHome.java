@@ -13,6 +13,6 @@ import java.rmi.RemoteException;
  * Time: 2:15:03 AM
  */
 
-public interface RBTApplicationStateTrackerHome extends ApplicationStateTrackerHome,EJBHome {
+public interface RBTApplicationStateTrackerHome extends ApplicationStateTrackerHome, EJBHome {
     public static String JNDI_NAME="ReportStateTrackerService";
 }
