@@ -59,7 +59,12 @@ public class ServiceLocator {
 
        }
 
-
+   public Object relocateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
+       // remove old reference so that it can be re-intialized
+       cache.put(jndiName, null);
+       return locateHome(environment, jndiName, narrowTo);
+   }
+    
   private ServiceLocator() {
        try {
            initialContext = getInitialContext();
