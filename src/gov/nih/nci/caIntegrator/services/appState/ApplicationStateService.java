@@ -33,8 +33,8 @@ final public class ApplicationStateService {
               while(true) {
                    try {
                      Thread.sleep(10000);
-                     Set keys = activeStates.keySet();
-                     Iterator statesIter = keys.iterator();
+                     Set entries = activeStates.entrySet();
+                     Iterator statesIter = entries.iterator();
                      while (statesIter.hasNext()) {
                          ApplicationState s =  (ApplicationState)statesIter.next();
                          long now = System.currentTimeMillis();

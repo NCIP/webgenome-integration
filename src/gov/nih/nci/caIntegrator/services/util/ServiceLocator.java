@@ -1,10 +1,7 @@
 package gov.nih.nci.caIntegrator.services.util;
 
-import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.naming.Context;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.rmi.PortableRemoteObject;
@@ -56,7 +53,6 @@ public class ServiceLocator {
           } finally {
              initialContext.close();
           }
-
        }
 
    public Object relocateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
@@ -67,7 +63,7 @@ public class ServiceLocator {
 
   private ServiceLocator() {
        try {
-           initialContext = getInitialContext();
+           initializeContext();
            cache = Collections.synchronizedMap(new HashMap());
        } catch(NamingException ne) {
            ne.printStackTrace();
@@ -109,18 +105,17 @@ public class ServiceLocator {
         }
         return remoteHome;
     }
-    private InitialContext getInitialContext () throws Exception{
-        InitialContext ctx;
+    private void initializeContext () throws Exception{
+
         try {
             Properties p = System.getProperties();
             InputStream is = ServiceLocator.class.getResourceAsStream("/jndi.properties");
             p.load(is);
             deployment = p.getProperty("jndi.deployment");
-            ctx = new InitialContext(p);
+            initialContext = new InitialContext(p);
         } catch(IOException ioe) {
             throw new Exception(ioe);
         }
-        return ctx;
     }
     public String getDeployment() {
           return deployment;
