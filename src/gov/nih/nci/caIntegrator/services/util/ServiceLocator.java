@@ -33,27 +33,23 @@ public class ServiceLocator {
    }
 
    public  Object locateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
-          if (environment != null)
+         if (environment != null)
              initialContext = new javax.naming.InitialContext(environment);
-          try {
-             Object objRef ;
-             if (cache.containsKey(jndiName)) {
-                    objRef  = cache.get(jndiName);
-             } else {
-                    Object remObjRef = initialContext.lookup(jndiName);
-                    // narrow only if necessary
-                    if (narrowTo.isInstance(java.rmi.Remote.class)) {
-                        objRef = javax.rmi.PortableRemoteObject.narrow(remObjRef , narrowTo);
-                    } else {
-                        objRef = remObjRef;
-                    }
-                    cache.put(jndiName, remObjRef);
-             }
-             return objRef;
-          } finally {
-             initialContext.close();
-          }
-       }
+         Object objRef ;
+         if (cache.containsKey(jndiName)) {
+                objRef  = cache.get(jndiName);
+         } else {
+                Object remObjRef = initialContext.lookup(jndiName);
+                // narrow only if necessary
+                if (narrowTo.isInstance(java.rmi.Remote.class)) {
+                    objRef = javax.rmi.PortableRemoteObject.narrow(remObjRef , narrowTo);
+                } else {
+                    objRef = remObjRef;
+                }
+                cache.put(jndiName, remObjRef);
+         }
+         return objRef;
+   }
 
    public Object relocateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
        // remove old reference so that it can be re-intialized
