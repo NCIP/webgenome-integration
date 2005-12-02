@@ -24,8 +24,9 @@
     <!-- jar webGenome service -->
     <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
         <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
+        <antcall target="config-jndi"/>
         <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
-              <manifest>
+               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
               </manifest>
@@ -142,7 +143,7 @@
           </jar>
      </target>
 
-     <target name="config-database" depends="">
+     <target name="config-database" >
             <delete file="${rbt.source.dir}/repository_database.xml"/>
             <copy file="${rbt.source.dir}/repository_database.xml.template" tofile="${rbt.source.dir}/repository_database.xml"/>
             <replaceregexp file = "${rbt.source.dir}/repository_database.xml" match="__DB_USER__" replace="${databaseUser}" flags="g"/>
@@ -150,6 +151,11 @@
             <replaceregexp file = "${rbt.source.dir}/repository_database.xml" match="__DB_PASSWD__" replace="${databasePassword}" flags="g"/>
      </target>
 
+     <target name="config-jndi">
+         <delete file="${rbt.source.dir}/jndi.properties"/>
+         <copy file="${rbt.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
+         <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
+     </target>
 
     <!-- cvs checkout related -->
     <target name="cvs-login" unless="cvs.login.present">
@@ -198,7 +204,7 @@
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
-    
+
     <target name="caIntegrator-checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv">
