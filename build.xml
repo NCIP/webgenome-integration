@@ -178,12 +178,27 @@
 		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
+       <!-- update caIntegrator-spec-->
+	<target name="spec-cvs-update" depends="check-cvs-login, cvs-login">
+		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+	</target>
+
+    <!-- update Rembrandt(really caIntegrator) -->
+	<target name="rbt-cvs-update" depends="spec-cvs-update">
+		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+	</target>
+
     <!-- checkout webGenomeIntegration -->
 	<target name="webGenomeIntegration-cvs-checkout">
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
+    <!-- update webGenomeIntegration -->
+	<target name="webGenomeIntegration-cvs-update">
+		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+	</target>
 
+    
     <target name="caIntegrator-checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv">
@@ -206,6 +221,8 @@
                       <include name="**/rti/webgenome/client/*.class"/>
                       <include name="**/caIntegrator/services/bioAssay/dto/*.class"/>
                       <include name="**/caIntegrator/services/bioAssay/ejb/RBT*.class"/>
+                      <include name="**/services/util/ServiceLocator.class"/>
+
                  </fileset>
             </jar>
      </target>
