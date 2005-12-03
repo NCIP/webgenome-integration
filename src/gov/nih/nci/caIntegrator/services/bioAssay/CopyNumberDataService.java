@@ -43,12 +43,14 @@ public class CopyNumberDataService implements BioAssayService{
         ComparativeGenomicQuery q = buildCopyNumberQuery(constraints, bioAssayIds);
 
         logger_.debug(q.toString());
+        System.out.println(q.toString());
         // 2. execute the actual Query
         long t0 = System.currentTimeMillis();
         ResultSet[] cghObjects = QueryProcessor.execute(q);
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
         logger_.debug("Time taken to process the query: " + t);
+        System.out.println("\"Time taken to process the query: \" + t");
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
                 as a collection of CopyNumber objects using sampleID as key

@@ -3,6 +3,7 @@ package gov.nih.nci.caIntegrator.services.appState;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.Collection;
 import java.security.SecureRandom;
 
 /**
@@ -33,7 +34,7 @@ final public class ApplicationStateService {
               while(true) {
                    try {
                      Thread.sleep(10000);
-                     Set entries = activeStates.entrySet();
+                     Collection entries = activeStates.values();
                      Iterator statesIter = entries.iterator();
                      while (statesIter.hasNext()) {
                          ApplicationState s =  (ApplicationState)statesIter.next();
