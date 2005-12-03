@@ -57,7 +57,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
     }
 
     public ExperimentDTO getExperiment(String experimentID, BioAssayDataConstraints assayDataConstraints, String clientID) throws Exception {
-        String message = "Received Request for experiment ID:{1} from client ID: {2}";
+        String message = "Received Request for experiment ID:{0} from client ID: {1}";
         String logMessage = MessageFormat.format(message, new Object[] {experimentID, clientID});
         logger_.debug(logMessage);
         String serviceType = assayDataConstraints.getQuantitationType();
