@@ -56,7 +56,7 @@ public class CopyNumberDataService implements BioAssayService{
         Double t = (t1-t0)/(1000 * 60.0);
         logger_.debug("Time taken to process the query: " + t);
         System.out.println("Time taken to process the query:" + t);
-        logger_.debug(" Total Number of Array Genomic Facts retrieved: "+ cghObjects.length)
+        logger_.debug(" Total Number of Array Genomic Facts retrieved: "+ cghObjects.length);
 
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
@@ -188,7 +188,7 @@ public class CopyNumberDataService implements BioAssayService{
     }
 
     private void groupCopyNumberObjsPerSample(ResultSet[] cghObjects, HashMap<String, Collection<CopyNumber>> h) {
-        try {
+
         for (int i = 0; i < cghObjects.length; i++) {
             CopyNumber cghObject = (CopyNumber) cghObjects[i];
             String bioAssayID = cghObject.getSampleId();
@@ -201,9 +201,6 @@ public class CopyNumberDataService implements BioAssayService{
             }
             // add this copyNumber object to the correspinding copyNumber object collection
             copyNumberCol.add(cghObject);
-        }
-        }catch(Throwable t) {
-            t.printStackTrace();
         }
     }
 
