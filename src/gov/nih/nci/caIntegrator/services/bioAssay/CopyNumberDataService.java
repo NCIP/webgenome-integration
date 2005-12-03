@@ -39,18 +39,25 @@ public class CopyNumberDataService implements BioAssayService{
 
     public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters) throws Exception{
 
+        logger_.debug("Request Received for bioAssayIds: " + bioAssayIds.length );
+
         // 1. parse the constraints object and build corresponding ComparativeGenomicQuery
         ComparativeGenomicQuery q = buildCopyNumberQuery(constraints, bioAssayIds);
+        for (int i = 0; i < bioAssayIds.length; i++) {
+            String bioAssayId = bioAssayIds[i];
+            logger_.debug(" " + bioAssayId + " ");
+        }
+        logger_.debug("\n");
 
-        logger_.debug(q.toString());
-        System.out.println(q.toString());
         // 2. execute the actual Query
         long t0 = System.currentTimeMillis();
         ResultSet[] cghObjects = QueryProcessor.execute(q);
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
         logger_.debug("Time taken to process the query: " + t);
-        System.out.println("\"Time taken to process the query: \" + t");
+        System.out.println("Time taken to process the query:" + t);
+        logger_.debug(" Total Number of Array Genomic Facts retrieved: "+ cghObjects.length)
+
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
                 as a collection of CopyNumber objects using sampleID as key
@@ -117,17 +124,23 @@ public class CopyNumberDataService implements BioAssayService{
     }
 
     private ComparativeGenomicQuery buildCopyNumberQuery(BioAssayDataConstraints constraints, String[] bioAssayIds) {
+        StringBuffer logMsg = new StringBuffer();
         String chromosome = constraints.getChromosome();
+        if (chromosome != null) logMsg.append(" Chromosome: " + chromosome);
+
         Long startPos = constraints.getStartPosition();
+        if (startPos != null) logMsg.append(" Start Pos: " + startPos);
+
         Long endPos = constraints.getEndPosition();
+        if (endPos != null) logMsg.append(" End Pos: " + endPos);
 
         ComparativeGenomicQuery q = (ComparativeGenomicQuery) QueryManager.createQuery(
                                             QueryType.CGH_QUERY_TYPE);
 
         RegionCriteria regionCriteria = buildRegionCriteria(chromosome, startPos, endPos);
-        if(regionCriteria != null)
+        if(regionCriteria != null) {
             q.setRegionCrit(regionCriteria);
-
+        }
         Collection<SampleIDDE> samples = new ArrayList<SampleIDDE>();
         for (int i = 0; i < bioAssayIds.length; i++) {
             SampleIDDE sampleDE = new SampleIDDE(bioAssayIds[i]);
@@ -142,6 +155,8 @@ public class CopyNumberDataService implements BioAssayService{
         AssayPlatformCriteria platformCrit = new AssayPlatformCriteria();
         platformCrit.setAssayPlatformDE(new AssayPlatformDE(Constants.AFFY_100K_SNP_ARRAY));
         q.setAssayPlatformCrit(platformCrit);
+
+        logger_.debug("\n\n " + logMsg.toString() + "\n\n");
         return q;
     }
 
