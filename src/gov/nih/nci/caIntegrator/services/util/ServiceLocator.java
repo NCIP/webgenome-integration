@@ -19,7 +19,7 @@ import java.io.IOException;
  * Time: 8:37:55 AM
  */
 public class ServiceLocator {
-   private InitialContext initialContext;
+   private static InitialContext initialContext;
    private Map cache;
    private String deployment ;
 
