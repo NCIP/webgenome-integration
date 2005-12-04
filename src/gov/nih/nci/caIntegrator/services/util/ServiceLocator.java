@@ -19,18 +19,23 @@ import java.io.IOException;
  * Time: 8:37:55 AM
  */
 public class ServiceLocator {
-   private static InitialContext initialContext;
+   private  InitialContext initialContext;
    private Map cache;
    private String deployment ;
 
    private static ServiceLocator ONLY_INSTANCE;
 
-   static  {
+ /*  static  {
            ONLY_INSTANCE = new ServiceLocator();
-   }
+   }*/
    static public ServiceLocator getInstance() {
+       if (ONLY_INSTANCE == null)
+           ONLY_INSTANCE = new ServiceLocator();
        return ONLY_INSTANCE;
    }
+    static public void  setInstance(ServiceLocator sl) {
+          ONLY_INSTANCE = null;
+    }
 
    public  Object locateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
          if (environment != null)
