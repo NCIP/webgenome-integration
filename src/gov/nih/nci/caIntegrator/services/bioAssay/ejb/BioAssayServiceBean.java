@@ -95,8 +95,8 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         exptDTO.setExperimentID(experimentID);
         exptDTO.setBioAssays(bioAssays);
 
-        logger_.debug("*******************END EXPERIMENT (" + experimentID +
-                ") REQUEST ***********************");
+        logger_.debug("\n\n****************** END EXPERIMENT (" + experimentID +
+                ") REQUEST ***********************\n");
 
 
         return exptDTO;

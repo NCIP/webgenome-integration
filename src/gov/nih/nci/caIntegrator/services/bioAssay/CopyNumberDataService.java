@@ -54,9 +54,10 @@ public class CopyNumberDataService implements BioAssayService{
         ResultSet[] cghObjects = QueryProcessor.execute(q);
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
-        logger_.debug("Time taken to process the query: " + t);
-        System.out.println("Time taken to process the query:" + t);
-        logger_.debug(" Total Number of Array Genomic Facts retrieved: "+ cghObjects.length);
+        logger_.debug("\n****************************************************");
+        logger_.debug("*********** TIME TAKEN TO PROCESS THE DB QUERY (in min): " +  t + "*******");
+        logger_.debug("************ Total Number of Array Genomic Facts retrieved: "+ cghObjects.length + "*******");
+        logger_.debug("****************************************************\n");
 
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
