@@ -2,6 +2,7 @@ package gov.nih.nci.caIntegrator.services.util;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.naming.CommunicationException;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.rmi.PortableRemoteObject;
@@ -44,7 +45,13 @@ public class ServiceLocator {
          if (cache.containsKey(jndiName)) {
                 objRef  = cache.get(jndiName);
          } else {
-                Object remObjRef = initialContext.lookup(jndiName);
+                Object remObjRef = null;
+                try {
+                    remObjRef = initialContext.lookup(jndiName);
+                } catch(CommunicationException ce) {
+                    // server might have rstarted try again
+                    remObjRef = initialContext.lookup(jndiName);
+                }
                 // narrow only if necessary
                 if (narrowTo.isInstance(java.rmi.Remote.class)) {
                     objRef = javax.rmi.PortableRemoteObject.narrow(remObjRef , narrowTo);
@@ -83,6 +90,9 @@ public class ServiceLocator {
                 localHome = initialContext.lookup(jndiHomeName);
                 cache.put(jndiHomeName, localHome);
             }
+        }  catch(CommunicationException ce) {
+            localHome = initialContext.lookup(jndiHomeName);
+            cache.put(jndiHomeName, localHome);
         } catch(NamingException ne) {
             ne.printStackTrace();
             throw new Exception(ne);
