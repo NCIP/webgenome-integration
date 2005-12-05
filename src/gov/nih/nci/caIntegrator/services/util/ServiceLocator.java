@@ -49,7 +49,7 @@ public class ServiceLocator {
                 try {
                     remObjRef = initialContext.lookup(jndiName);
                 } catch(CommunicationException ce) {
-                    // server might have rstarted try again
+                    // server might have restarted.  So retry to locate
                     remObjRef = initialContext.lookup(jndiName);
                 }
                 // narrow only if necessary
