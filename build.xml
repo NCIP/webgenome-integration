@@ -1,5 +1,5 @@
 <project name="WebGenomeIntegration" default="assemble-service" basedir=".">
-    <property file="buildRBT.properties"/>
+    <property file="buildIntegModule.properties"/>
 
     <!-- compile webGenome service source -->
     <target name="compileWebGenomeSrv" depends="build-rbt">
@@ -60,20 +60,16 @@
         </javac>
     </target>
 
-    <target name="build-rbt" depends="config-database, compile-rbt">
+    <target name="build-rbt" depends="config-database, compile-rbt, config-OJB-logging">
         <delete file="${rbt.build.dir}\${rbt.app.jar.name}.jar"/>
         <jar jarfile="${rbt.build.dir}\${rbt.app.jar.name}.jar">
-              <fileset dir="${rbt.build.classes.dir}"></fileset>
               <fileset dir="${rbt.build.classes.dir}">
-                <exclude name="**/web/**"/>
-             </fileset>
-
+                  <exclude name="**/web/**"/>
+              </fileset>
               <fileset dir="${rbt.source.dir}">
                        <include name="repository*"/>
                        <include name="deToBeanAttrMappings.xml"/>
-              </fileset>
-              <fileset dir="${webGenome.source.dir}">
-                      <include name="OJB.properties"/>
+                       <exclude name="*template*"/>
               </fileset>
          </jar>
     </target>
@@ -152,9 +148,42 @@
      </target>
 
      <target name="config-jndi">
-         <delete file="${rbt.source.dir}/jndi.properties"/>
+         <delete file="${webGenome.build.classes.dir}/jndi.properties"/>
          <copy file="${rbt.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
          <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
+     </target>
+
+    <target name="config-OJB-logging">
+        <delete file="${rbt.build.classes.dir}/OJB.properties"/>
+        <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${rbt.build.classes.dir}/OJB.properties"/>
+        <replaceregexp file = "${rbt.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
+    </target>
+
+
+    <target name="buildAppStateClient" depends="compileWebGenomeSrv">
+            <delete file="${webGenome.build.dir}\appStateClient.jar"/>
+            <jar jarfile="${webGenome.build.dir}\appStateClient.jar">
+                <fileset dir="${webGenome.build.classes.dir}">
+                            <include name="**/appState/dto/*.class"/>
+                            <include name="**/appState/ejb/*.class"/>
+                            <include name="**/appState/TrackableAppState.class"/>
+                            <include name="**/appState/ApplicationStateTracker.class"/>
+                            <include name="**/appState/ApplicationStateTrackerHome.class"/>
+                            <include name="**/services/util/ServiceLocator.class"/>
+                </fileset>
+            </jar>
+     </target>
+     <target name="buildWebGenomeClient" depends="compileWebGenomeSrv">
+            <delete file="${webGenome.build.dir}\webGenomeClientEJB.jar"/>
+            <jar jarfile="${webGenome.build.dir}\webGenomeClientEJB.jar">
+                <fileset dir="${webGenome.build.classes.dir}">
+                      <include name="**/rti/webgenome/client/*.class"/>
+                      <include name="**/caIntegrator/services/bioAssay/dto/*.class"/>
+                      <include name="**/caIntegrator/services/bioAssay/ejb/RBT*.class"/>
+                      <include name="**/services/util/ServiceLocator.class"/>
+
+                 </fileset>
+            </jar>
      </target>
 
     <!-- cvs checkout related -->
@@ -204,35 +233,7 @@
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
-
     <target name="caIntegrator-checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
-
-    <target name="buildAppStateClient" depends="compileWebGenomeSrv">
-            <delete file="${webGenome.build.dir}\appStateClient.jar"/>
-            <jar jarfile="${webGenome.build.dir}\appStateClient.jar">
-                <fileset dir="${webGenome.build.classes.dir}">
-                            <include name="**/appState/dto/*.class"/>
-                            <include name="**/appState/ejb/*.class"/>
-                            <include name="**/appState/TrackableAppState.class"/>
-                            <include name="**/appState/ApplicationStateTracker.class"/>
-                            <include name="**/appState/ApplicationStateTrackerHome.class"/>
-                            <include name="**/services/util/ServiceLocator.class"/>
-                </fileset>
-            </jar>
-     </target>
-     <target name="buildWebGenomeClient" depends="compileWebGenomeSrv">
-            <delete file="${webGenome.build.dir}\webGenomeClientEJB.jar"/>
-            <jar jarfile="${webGenome.build.dir}\webGenomeClientEJB.jar">
-                <fileset dir="${webGenome.build.classes.dir}">
-                      <include name="**/rti/webgenome/client/*.class"/>
-                      <include name="**/caIntegrator/services/bioAssay/dto/*.class"/>
-                      <include name="**/caIntegrator/services/bioAssay/ejb/RBT*.class"/>
-                      <include name="**/services/util/ServiceLocator.class"/>
-
-                 </fileset>
-            </jar>
-     </target>
-
-
+    <target name="caIntegrator-update" depends="webGenomeIntegration-cvs-update, rbt-cvs-update"/>
 
 </project>
