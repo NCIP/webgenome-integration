@@ -22,7 +22,7 @@ import java.security.SecureRandom;
 final public class ApplicationStateService {
 
     // may be read this from peroperty file
-    private static long APP_STATE_EXPIRE_INTERVAL = 500000; // milli-secs
+    private static long APP_STATE_EXPIRE_INTERVAL = 10000000; // milli-secs
     private final static HashMap activeStates = new HashMap();
 
     // singleton
