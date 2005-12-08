@@ -1,4 +1,4 @@
-<project name="WebGenomeIntegration" default="assemble-service" basedir=".">
+<project name="WebGenomeIntegration" default="buildAll" basedir=".">
     <property file="buildIntegModule.properties"/>
 
     <!-- compile webGenome service source -->
