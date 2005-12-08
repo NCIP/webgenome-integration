@@ -224,7 +224,7 @@
 	</target>
 
     <!-- checkout webGenomeIntegration -->
-	<target name="webGenomeIntegration-cvs-checkout">
+	<target name="webGenomeIntegration-cvs-checkout" depends="check-cvs-login, cvs-login">
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
@@ -233,7 +233,7 @@
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
-    <target name="caIntegrator-checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
-    <target name="caIntegrator-update" depends="webGenomeIntegration-cvs-update, rbt-cvs-update"/>
+    <target name="checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
+    <target name="update" depends="webGenomeIntegration-cvs-update, rbt-cvs-update"/>
 
 </project>
