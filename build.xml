@@ -26,7 +26,7 @@
         <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
         <antcall target="config-jndi"/>
         <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
-               <manifest>
+              <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
               </manifest>
@@ -35,7 +35,7 @@
               <zipfileset file="${webGenome.root}/META-INF/ejb-jar.xml" prefix="META-INF"/>
               <zipfileset file="${webGenome.root}/META-INF/jboss.xml" prefix="META-INF"/>
               <zipfileset file="${webGenome.root}/META-INF/jbosscmp-jdbc.xml" prefix="META-INF"/>
-     </jar>
+        </jar>
     </target>
 
     <!-- compile Rembrandt (caIntegrator) code -->
@@ -43,20 +43,26 @@
         <delete dir="${rbt.build.classes.dir}"/>
         <mkdir dir="${rbt.build.classes.dir}" />
         <javac srcdir="${rbt.source.dir}" destdir="${rbt.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
-         <classpath>
-              <fileset dir="${spec.build.dir}">
-                <include name="${spec.app.jar.name}.jar"/>
-              </fileset>
-              <fileset dir="${rbt.source.lib.dir}">
-                 <include name="*.jar"/>
-               </fileset>
-               <fileset dir="${rbt.source.nondeploy.lib.dir}">
-                 <include name="*.jar"/>
-               </fileset>
-             <fileset dir="${jboss.lib.dir}">
-                <include name="jboss-j2ee.jar"/>
-             </fileset>
-         </classpath>
+             <classpath>
+                    <!-- 1. include dependencies (analysis-commons.jar and caintegrator-spec.jar) -->
+                    <fileset dir="${analysis-commons.build.dir}">
+                        <include name="${analysis-commons.app.jar.name}.jar"/>
+                    </fileset>
+                    <fileset dir="${spec.build.dir}">
+                        <include name="${spec.app.jar.name}.jar"/>
+                    </fileset>
+
+                    <!-- 2. include rembrandt classes and deployable jars themseleves -->
+                    <fileset dir="${rbt.source.lib.dir}">
+                        <include name="*.jar"/>
+                    </fileset>
+                    <fileset dir="${rbt.source.nondeploy.lib.dir}">
+                        <include name="*.jar"/>
+                    </fileset>
+                    <fileset dir="${jboss.lib.dir}">
+                        <include name="jboss-j2ee.jar"/>
+                    </fileset>
+            </classpath>
         </javac>
     </target>
 
@@ -74,20 +80,55 @@
          </jar>
     </target>
 
+
+    <!-- build analysis-commons project as a jar file -->
+    <target name="build-analysis-commons">
+        <delete dir="${analysis-commons.build.classes.dir}"/>
+		<mkdir dir="${analysis-commons.build.classes.dir}" />
+		<javac srcdir="${analysis-commons.source.dir}" destdir="${analysis-commons.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
+             <classpath>
+                  <fileset dir="${analysis-commons.source.lib.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+             </classpath>
+		</javac>
+        <delete file="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar" />
+		<jar jarfile="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar">
+              <fileset dir="${analysis-commons.build.classes.dir}"></fileset>
+<!--
+               <fileset dir="${analysis-commons.source.lib.dir}">
+                   <include name="*.jar"/>
+               </fileset>
+-->
+         </jar>
+    </target>
+
+
     <!-- build caintegrator-spec project as a jar file -->
-    <target name="build-spec">
+    <target name="build-spec" depends="build-analysis-commons">
+
+        <!-- 1. compile caintegrator-spec source code -->
         <delete dir="${spec.build.classes.dir}"/>
 		<mkdir dir="${spec.build.classes.dir}" />
 		<javac srcdir="${spec.source.dir}" destdir="${spec.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
-		 <classpath>
-		      <fileset dir="${spec.source.lib.dir}">
-			        <include name="*.jar"/>
-		      </fileset>
-		      <fileset dir="${spec.source.nondeploy.lib.dir}">
-			        <include name="*.jar"/>
-		      </fileset>
-		 </classpath>
+             <classpath>
+                 <!-- a. include dependencies (caintegrator-spec.jar -->
+                 <fileset dir="${analysis-commons.build.dir}">
+                     <include name="${analysis-commons.app.jar.name}.jar"/>
+                 </fileset>
+
+                 <!-- b. include required  caintegrator-spec library jars-->
+                 <fileset dir="${spec.source.lib.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+                  <fileset dir="${spec.source.nondeploy.lib.dir}">
+                        <include name="*.jar"/>
+                  </fileset>
+
+             </classpath>
 		</javac>
+
+        <!-- 2. make a caintegrator-spec jar file -->
         <delete file="${spec.build.dir}\${spec.app.jar.name}.jar" />
 		<jar jarfile="${spec.build.dir}\${spec.app.jar.name}.jar">
               <fileset dir="${spec.build.classes.dir}"></fileset>
@@ -96,6 +137,8 @@
                </fileset>
          </jar>
     </target>
+
+
 
     <!-- put the final service together -->
      <target name="assemble-service" depends="build-rbt, build-webGenomeData-service">
@@ -130,8 +173,12 @@
                   <include name="${spec.app.jar.name}.jar"/>
              </fileset>
 
+             <!-- 4. include analysis-commons code base -->
+             <fileset dir="${analysis-commons.build.dir}">
+                  <include name="${analysis-commons.app.jar.name}.jar"/>
+             </fileset>
 
-             <!-- 4. include ejbs -->
+             <!-- 5. include ejbs -->
              <fileset dir="${webGenome.build.dir}">
                   <include name="${service.rbt.name}.jar"/>
              </fileset>
@@ -203,8 +250,14 @@
 		<echoproperties prefix="cvs.login.present" />
 	</target>
 
+
+    <!-- checkout analysis-commons-->
+     <target name="analysis-commons-cvs-checkout" depends="check-cvs-login, cvs-login">
+         <cvs cvsRoot="${cvsRoot}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
+     </target>
+
     <!-- checkout caIntegrator-spec-->
-	<target name="spec-cvs-checkout" depends="check-cvs-login, cvs-login">
+	<target name="spec-cvs-checkout" depends="analysis-commons-cvs-checkout">
 		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
@@ -213,8 +266,13 @@
 		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
-       <!-- update caIntegrator-spec-->
-	<target name="spec-cvs-update" depends="check-cvs-login, cvs-login">
+    <!-- update analysis-commons -->
+	<target name="analysis-commons-cvs-update" depends="check-cvs-login, cvs-login">
+		<cvs cvsRoot="${cvsRoot}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+	</target>
+
+    <!-- update caIntegrator-spec-->
+	<target name="spec-cvs-update" depends="analysis-commons-cvs-update">
 		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
