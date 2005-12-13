@@ -253,32 +253,32 @@
 
     <!-- checkout analysis-commons-->
      <target name="analysis-commons-cvs-checkout" depends="check-cvs-login, cvs-login">
-         <cvs cvsRoot="${cvsRoot}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
+         <cvs cvsRoot="${cvsRoot}" tag="${analysis-commons-cvs-tag}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
      </target>
 
     <!-- checkout caIntegrator-spec-->
 	<target name="spec-cvs-checkout" depends="analysis-commons-cvs-checkout">
-		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${spec-cvs-tag}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
     <!-- checkout Rembrandt(really caIntegrator) -->
 	<target name="rbt-cvs-checkout" depends="spec-cvs-checkout">
-		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${rbt-cvs-tag}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
     <!-- update analysis-commons -->
 	<target name="analysis-commons-cvs-update" depends="check-cvs-login, cvs-login">
-		<cvs cvsRoot="${cvsRoot}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${analysis-commons-cvs-tag}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
     <!-- update caIntegrator-spec-->
 	<target name="spec-cvs-update" depends="analysis-commons-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${spec-cvs-tag}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
     <!-- update Rembrandt(really caIntegrator) -->
 	<target name="rbt-cvs-update" depends="spec-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${rbt-cvs-tag}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
     <!-- checkout webGenomeIntegration -->
@@ -288,7 +288,7 @@
 
     <!-- update webGenomeIntegration  -->
 	<target name="webGenomeIntegration-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${webGenomeIntegration-cvs-tag}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
 
     <target name="checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
