@@ -283,10 +283,10 @@
 
     <!-- checkout webGenomeIntegration -->
 	<target name="webGenomeIntegration-cvs-checkout" depends="check-cvs-login, cvs-login">
-		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
+		<cvs cvsRoot="${cvsRoot}" tag="${webGenomeIntegration-cvs-tag}"  package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
 	</target>
 
-    <!-- update webGenomeIntegration -->
+    <!-- update webGenomeIntegration  -->
 	<target name="webGenomeIntegration-cvs-update">
 		<cvs cvsRoot="${cvsRoot}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
 	</target>
