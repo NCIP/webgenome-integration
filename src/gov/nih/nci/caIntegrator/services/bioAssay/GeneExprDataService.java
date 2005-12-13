@@ -13,11 +13,11 @@ import java.util.List;
  * Time: 10:24:03 AM
  */
 public class GeneExprDataService implements BioAssayService{
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters) throws Exception {
+    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception {
         return null;
     }
 
-    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters) throws Exception {
+    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters, String clientID) throws Exception {
         return new BioAssayDTO[0];
     }
 }

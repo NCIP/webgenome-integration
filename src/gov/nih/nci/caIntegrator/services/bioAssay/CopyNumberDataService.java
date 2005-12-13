@@ -33,21 +33,13 @@ public class CopyNumberDataService implements BioAssayService{
      private static org.apache.log4j.Logger logger_ =
         org.apache.log4j.Logger.getLogger(CopyNumberDataService .class);
 
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters) {
-        return null;
-    }
 
-    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters) throws Exception{
+    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters, String clientID) throws Exception{
 
-        logger_.debug("Request Received for bioAssayIds: " + bioAssayIds.length );
+        logger_.debug("RECEIVED REQUEST FOR BIOASSAYS: " + bioAssayIds.length );
 
         // 1. parse the constraints object and build corresponding ComparativeGenomicQuery
         ComparativeGenomicQuery q = buildCopyNumberQuery(constraints, bioAssayIds);
-        for (int i = 0; i < bioAssayIds.length; i++) {
-            String bioAssayId = bioAssayIds[i];
-            logger_.debug(" " + bioAssayId + " ");
-        }
-        logger_.debug("\n");
 
         // 2. execute the actual Query
         long t0 = System.currentTimeMillis();
@@ -55,9 +47,8 @@ public class CopyNumberDataService implements BioAssayService{
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
         logger_.debug("\n****************************************************");
-        logger_.debug("*********** TIME TAKEN TO PROCESS THE DB QUERY (in min): " +  t + "*******");
-        logger_.debug("************ Total Number of Array Genomic Facts retrieved: "+ cghObjects.length + "*******");
-        logger_.debug("****************************************************\n");
+        logger_.debug("*********** TIME TAKEN TO PROCESS CLIENT: "+ clientID +  " THE DB QUERY (in min): " +  t + "*******");
+        logger_.debug("************ TOTAL NUMBER OF BIOASSAYDATUMS RETRIEVED FOR CLIENT:"+ clientID +  ": "+ cghObjects.length + "*******");
 
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
@@ -127,13 +118,13 @@ public class CopyNumberDataService implements BioAssayService{
     private ComparativeGenomicQuery buildCopyNumberQuery(BioAssayDataConstraints constraints, String[] bioAssayIds) {
         StringBuffer logMsg = new StringBuffer();
         String chromosome = constraints.getChromosome();
-        if (chromosome != null) logMsg.append(" Chromosome: " + chromosome);
+        if (chromosome != null) logMsg.append(" CHROMOSOME: " + chromosome);
 
         Long startPos = constraints.getStartPosition();
-        if (startPos != null) logMsg.append(" Start Pos: " + startPos);
+        if (startPos != null) logMsg.append(" START-POSITION: " + startPos);
 
         Long endPos = constraints.getEndPosition();
-        if (endPos != null) logMsg.append(" End Pos: " + endPos);
+        if (endPos != null) logMsg.append(" END-POSITION: " + endPos);
 
         ComparativeGenomicQuery q = (ComparativeGenomicQuery) QueryManager.createQuery(
                                             QueryType.CGH_QUERY_TYPE);
@@ -205,5 +196,8 @@ public class CopyNumberDataService implements BioAssayService{
         }
     }
 
+    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) {
+        return null;
+    }
 
 }

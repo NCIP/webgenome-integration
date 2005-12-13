@@ -59,7 +59,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
     public ExperimentDTO getExperiment(String experimentID, BioAssayDataConstraints assayDataConstraints, String clientID) throws Exception {
 
         logger_.debug("\n\n\n\n*******************BEGIN  NEW EXPERIMENT (" + experimentID +
-                ") REQUEST ***********************");
+                ") REQUEST FOR: " + clientID + "***********************");
         String message = "Received Request for experiment ID:{0} from client ID: {1}";
         String logMessage = MessageFormat.format(message, new Object[] {experimentID, clientID});
         logger_.debug(logMessage);
@@ -85,7 +85,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         HashMap groups = state.getGroups();
         String[] bioAssayIDS = (String[]) groups.get(experimentID);
         List reporterNames = state.getSelectedReporerNames();
-        BioAssayDTO[] bioAssays = service.getBioAssays(bioAssayIDS, assayDataConstraints, reporterNames);
+        BioAssayDTO[] bioAssays = service.getBioAssays(bioAssayIDS, assayDataConstraints, reporterNames, clientID);
 
         String assayMessage = "Total BioAssays Returned {0} for client ID: {1}:";
         String assayLogMessage = MessageFormat.format(assayMessage, new Object[] {bioAssays.length, clientID});
@@ -96,7 +96,7 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         exptDTO.setBioAssays(bioAssays);
 
         logger_.debug("\n\n****************** END EXPERIMENT (" + experimentID +
-                ") REQUEST ***********************\n");
+                ") REQUEST FOR: " + clientID + "***********************\n");
 
 
         return exptDTO;

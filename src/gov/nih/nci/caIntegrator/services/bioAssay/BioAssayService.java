@@ -13,6 +13,6 @@ import java.util.List;
  * Time: 10:21:35 AM
  **/
 public interface BioAssayService {
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters) throws Exception;
-    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters) throws Exception;
+    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception;
+    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters, String clientID) throws Exception;
 }
