@@ -294,7 +294,7 @@
     <target name="checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
     <target name="update" depends="webGenomeIntegration-cvs-update, rbt-cvs-update"/>
 
-    <target name="buildAll" depends="checkout">
+    <target name="buildAll">
         <antcall target="assemble-service"></antcall>
     </target>
 </project>
