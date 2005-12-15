@@ -47,8 +47,8 @@ public class CopyNumberDataService implements BioAssayService{
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
         logger_.debug("\n****************************************************");
-        logger_.debug("*********** TIME TAKEN TO PROCESS CLIENT: "+ clientID +  " THE DB QUERY (in min): " +  t + "*******");
-        logger_.debug("************ TOTAL NUMBER OF BIOASSAYDATUMS RETRIEVED FOR CLIENT:"+ clientID +  ": "+ cghObjects.length + "*******");
+        logger_.debug("TIME TAKEN TO PROCESS CLIENT: "+ clientID +  " THE DB QUERY (in min): " +  t );
+        logger_.debug("TOTAL NUMBER OF BIOASSAYDATUMS RETRIEVED FOR CLIENT:"+ clientID +  ": "+ cghObjects.length);
 
         // 3. now format result objects
         /* 3.1. Store CopyNuber result objects per sampleID
