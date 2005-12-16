@@ -13,7 +13,7 @@
                  <fileset dir="${spec.build.dir}">
                     <include name="${spec.app.jar.name}.jar"/>
                 </fileset>
-                <fileset dir="${jboss.lib.dir}">
+                <fileset dir="${webGenome.source.lib.dir}">
                     <include name="jboss-j2ee.jar"/>
                     <include name="log4j.jar"/>
                 </fileset>
@@ -59,14 +59,14 @@
                     <fileset dir="${rbt.source.nondeploy.lib.dir}">
                         <include name="*.jar"/>
                     </fileset>
-                    <fileset dir="${jboss.lib.dir}">
+                    <fileset dir="${webGenome.source.lib.dir}">
                         <include name="jboss-j2ee.jar"/>
                     </fileset>
             </classpath>
         </javac>
     </target>
 
-    <target name="build-rbt" depends="config-database, compile-rbt, config-OJB-logging">
+    <target name="build-rbt" depends="config-database, compile-rbt">
         <delete file="${rbt.build.dir}\${rbt.app.jar.name}.jar"/>
         <jar jarfile="${rbt.build.dir}\${rbt.app.jar.name}.jar">
               <fileset dir="${rbt.build.classes.dir}">
