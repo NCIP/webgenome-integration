@@ -200,11 +200,11 @@
          <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
      </target>
 
-    <target name="config-OJB-logging">
+   <!-- <target name="config-OJB-logging">
         <delete file="${rbt.build.classes.dir}/OJB.properties"/>
         <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${rbt.build.classes.dir}/OJB.properties"/>
         <replaceregexp file = "${rbt.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
-    </target>
+    </target>-->
 
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv">
