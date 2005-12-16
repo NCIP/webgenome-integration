@@ -66,7 +66,7 @@
         </javac>
     </target>
 
-    <target name="build-rbt" depends="config-database, compile-rbt">
+    <target name="build-rbt" depends="config-database, compile-rbt, config-OJB-logging">
         <delete file="${rbt.build.dir}\${rbt.app.jar.name}.jar"/>
         <jar jarfile="${rbt.build.dir}\${rbt.app.jar.name}.jar">
               <fileset dir="${rbt.build.classes.dir}">
