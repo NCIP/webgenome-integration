@@ -1,29 +1,6 @@
-<project name="WebGenomeIntegration" default="assemble-bioAssayService_anthill" basedir=".">
-    <property file="build.properties"/>
-	<!--
-	TARGET: COMPILE
-		Compiles the webGenome service source  directory with anthill dependencies
-	-->
-	<target name="compileWebGenomeSrv_anthill">
-	    <delete dir="${webGenome.build.classes.dir}"/>
-        <mkdir dir="${webGenome.build.classes.dir}"/>
-        <javac srcdir="${webGenome.source.dir}" destdir="${webGenome.build.classes.dir}" source="1.5" debug="true" debuglevel="lines,vars,source">
-            <classpath>
-                <fileset dir="${webGenome.source.lib.dir}">
-                    <include name="jboss-j2ee.jar"/>
-                    <include name="log4j.jar"/>
-                </fileset>
-                <fileset dir="${anthill.dependency.artifacts.dir}">
-					<include name="*.jar"/>
-				</fileset>
-				
-            </classpath>
-        </javac>
-	</target>
-	<!--
-	TARGET: COMPILE
-		Compiles the webGenome service source  directory without anthill dependencies
-	-->
+<project name="WebGenomeIntegration" default="buildAll" basedir=".">
+    <property file="buildIntegModule.properties"/>
+
     <!-- compile webGenome service source -->
     <target name="compileWebGenomeSrv" depends="build-rbt">
         <delete dir="${webGenome.build.classes.dir}"/>
@@ -43,31 +20,7 @@
             </classpath>
         </javac>
     </target>
-	<!--
-	TARGET: JAR 
-		Jar webGenome service with anthill dependencies
-	-->
-    <!--  -->
-    <target name="build-webGenomeData-service_anthill" depends="compileWebGenomeSrv_anthill">
-        <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
-        <antcall target="config-jndi"/>
-        <antcall target="config-OJB-logging"/>
-        <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
-              <manifest>
-                <attribute name="Created-By" value="Ant"/>
-                <attribute name="Manifest-Version" value="1.0"/>
-              </manifest>
-              <zipfileset dir="${webGenome.build.classes.dir}" prefix="">
-              </zipfileset>
-              <zipfileset file="${webGenome.root}/META-INF/ejb-jar.xml" prefix="META-INF"/>
-              <zipfileset file="${webGenome.root}/META-INF/jboss.xml" prefix="META-INF"/>
-              <zipfileset file="${webGenome.root}/META-INF/jbosscmp-jdbc.xml" prefix="META-INF"/>
-        </jar>
-    </target>
-    <!--
-	TARGET: JAR 
-		Jar webGenome service without anthill dependencies
-	-->
+
     <!-- jar webGenome service -->
     <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
         <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
@@ -184,29 +137,7 @@
                </fileset>
          </jar>
     </target>
-	<!--
-	TARGET: JAR 
-		Put the final bioArrasyService jar file together with anthill dependencies
-	-->
-     <target name="assemble-bioAssayService_anthill" depends="build-webGenomeData-service_anthill">
-         <delete file="${service.bioAssay.name}.jar"/>
-         <jar destfile="${service.bioAssay.name}.jar" duplicate="preserve">
-              <manifest>
-                <attribute name="Class-Path" value="commons-collections.jar commons-dbcp.jar commons-lang-2.0.jar commons-pool.jar db-ojb-1.0.rc7.jar jcs.jar jdo.jar jdori.jar oracle.jar RBT.jar"/>
-                <attribute name="Created-By" value="Ant"/>
-                <attribute name="Manifest-Version" value="1.0"/>
-              </manifest>
-            <!-- include caintegrator-rembrandt.jar, caintegrator-spec.jar,  analysis-commons.jar -->
-			<fileset dir="${anthill.dependency.artifacts.dir}">
-				<include name="*.jar"/>
-			</fileset>
-            <!-- include ejbs -->
-             <fileset dir="${webGenome.build.dir}">
-                  <include name="${service.rbt.name}.jar"/>
-             </fileset>
 
-          </jar>
-     </target>
 
 
     <!-- put the final service together -->
@@ -265,14 +196,14 @@
 
      <target name="config-jndi">
          <delete file="${webGenome.build.classes.dir}/jndi.properties"/>
-         <copy file="${webGenome.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
+         <copy file="${rbt.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
          <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
      </target>
 
    <target name="config-OJB-logging">
-        <delete file="${webGenome.build.classes.dir}/OJB.properties"/>
-        <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${webGenome.build.classes.dir}/OJB.properties"/>
-        <replaceregexp file = "${webGenome.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
+        <delete file="${rbt.build.classes.dir}/OJB.properties"/>
+        <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${rbt.build.classes.dir}/OJB.properties"/>
+        <replaceregexp file = "${rbt.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
     </target>
 
 
