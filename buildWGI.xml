@@ -94,13 +94,8 @@
 		</javac>
         <delete file="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar" />
 		<jar jarfile="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar">
-              <fileset dir="${analysis-commons.build.classes.dir}"></fileset>
-<!--
-               <fileset dir="${analysis-commons.source.lib.dir}">
-                   <include name="*.jar"/>
-               </fileset>
--->
-         </jar>
+              		<fileset dir="${analysis-commons.build.classes.dir}"></fileset>
+         	</jar>
     </target>
 
 
@@ -167,7 +162,7 @@
                   <include name="${rbt.app.jar.name}.jar"/>
              </fileset>
 
-             <!-- 3. include Rembrandt code base -->
+             <!-- 3. include caintegrator-spec code base -->
              <fileset dir="${spec.build.dir}">
                   <include name="${spec.app.jar.name}.jar"/>
              </fileset>
@@ -232,68 +227,8 @@
             </jar>
      </target>
 
-    <!-- cvs checkout related -->
-    <target name="cvs-login" unless="cvs.login.present">
-		<echoproperties prefix="cvs" />
-		<available file="${basedir}/.cvspass" type="file" property="cvs.login.present" />
-		<delete file="${basedir}/.cvspass" />
-		<input message="Please enter CVS password for user ${cvsUser}:" addproperty="cvsPassword" />
-		<condition property="noCVSPassword">
-			<equals arg1="" arg2="${cvsPassword}" />
-		</condition>
-		<fail if="noCVSPassword">You did not enter your CVS password.</fail>
-		<cvspass cvsRoot="${cvsRoot}" password="${cvsPassword}" passfile="${basedir}/.cvspass" />
-	</target>
-	<target name="check-cvs-login">
-		<available file="${basedir}/.cvspass" type="file" property="cvs.login.present" />
-		<echoproperties prefix="cvs.login.present" />
-	</target>
-
-
-    <!-- checkout analysis-commons-->
-     <target name="analysis-commons-cvs-checkout" depends="check-cvs-login, cvs-login">
-         <cvs cvsRoot="${cvsRoot}" tag="${analysis-commons-cvs-tag}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
-     </target>
-
-    <!-- checkout caIntegrator-spec-->
-	<target name="spec-cvs-checkout" depends="analysis-commons-cvs-checkout">
-		<cvs cvsRoot="${cvsRoot}" tag="${spec-cvs-tag}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- checkout Rembrandt(really caIntegrator) -->
-	<target name="rbt-cvs-checkout" depends="spec-cvs-checkout">
-		<cvs cvsRoot="${cvsRoot}" tag="${rbt-cvs-tag}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- update analysis-commons -->
-	<target name="analysis-commons-cvs-update" depends="check-cvs-login, cvs-login">
-		<cvs cvsRoot="${cvsRoot}" tag="${analysis-commons-cvs-tag}" package="${analysis-commons-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- update caIntegrator-spec-->
-	<target name="spec-cvs-update" depends="analysis-commons-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" tag="${spec-cvs-tag}" package="${spec-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- update Rembrandt(really caIntegrator) -->
-	<target name="rbt-cvs-update" depends="spec-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" tag="${rbt-cvs-tag}" package="${rbt-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- checkout webGenomeIntegration -->
-	<target name="webGenomeIntegration-cvs-checkout" depends="check-cvs-login, cvs-login">
-		<cvs cvsRoot="${cvsRoot}" tag="${webGenomeIntegration-cvs-tag}"  package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="checkout" passfile="${basedir}/.cvspass" />
-	</target>
-
-    <!-- update webGenomeIntegration  -->
-	<target name="webGenomeIntegration-cvs-update">
-		<cvs cvsRoot="${cvsRoot}" tag="${webGenomeIntegration-cvs-tag}" package="${webGenomeIntegration-cvsPackage}" dest="${checkoutDir}" command="update -d " passfile="${basedir}/.cvspass" />
-	</target>
-
-    <target name="checkout" depends="webGenomeIntegration-cvs-checkout, rbt-cvs-checkout"/>
-    <target name="update" depends="webGenomeIntegration-cvs-update, rbt-cvs-update"/>
-
     <target name="buildAll">
         <antcall target="assemble-service"></antcall>
     </target>
+
 </project>
