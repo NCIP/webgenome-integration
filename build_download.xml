@@ -1,0 +1,40 @@
+<project name="caintegrator-webgenomeIntegration" default="build_zip_file_anthill" basedir=".">
+	<property file="./build_download.properties"/>
+
+	<target name="build_dependency" if="${anthill.artifacts.dir}" depends="build_zip_file_anthill">
+		<echo>
+			Artifacts copied to ${anthill.artifacts.dir}
+		</echo>
+		<copy file="${module_name}.zip" todir="${anthill.artifacts.dir}"/>
+	</target>
+	<!--
+	TARGET: Zip
+		Zip the source code and compiled caintegrator-spec.jar
+	-->
+	<target name="build_zip_file" >
+     	<delete file="${module_name}.zip"/>
+	     <zip destfile="${module_name}.zip">
+			 <zipfileset dir="${build.source.dir}" prefix="${project_name}/${module_name}/${build.source.dir}"/>
+			 <zipfileset dir="${build.lib.dir}" prefix="${project_name}/${module_name}/${build.lib.dir}">
+			 	<include name="*.jar"/>
+			 </zipfileset>
+			 <zipfileset dir="download" prefix="${project_name}/${module_name}/.">
+                <include name="build.xml"/>
+                <include name="build.properties"/>
+             </zipfileset>		
+         </zip>
+     </target>
+	<target name="noop"/>
+	<!--
+	TARGET: Zip
+		Zip the source code and compiled caintegrator-spec.jar
+	-->
+	<target name="build_zip_file_anthill" depends="build_zip_file">
+		<zip destfile="${module_name}.zip" update="true">
+			 <zipfileset dir="${anthill.dependency.artifacts.dir}" prefix="${project_name}/${module_name}/${build.deploy.lib.dir}">
+			 	<include name="caintegrator-analysis-commons.jar"/>
+			 	<include name="caintegrator-spec.jar"/>
+			 </zipfileset>
+        </zip>
+     </target>
+</project>
