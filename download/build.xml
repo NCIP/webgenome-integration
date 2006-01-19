@@ -6,14 +6,14 @@
 	-->
     <!-- jar webGenome service -->
     <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
-        <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
+        <delete file="${build.dir}\${service.jar.name}.jar"/>
         <antcall target="config-jndi"/>
-        <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
+        <jar destfile="${build.dir}\${service.jar.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
               </manifest>
-              <zipfileset dir="${webGenome.build.classes.dir}" prefix="">
+              <zipfileset dir="${build.classes.dir}" prefix="">
               </zipfileset>
               <zipfileset file="${webGenome.root}/META-INF/ejb-jar.xml" prefix="META-INF"/>
               <zipfileset file="${webGenome.root}/META-INF/jboss.xml" prefix="META-INF"/>
