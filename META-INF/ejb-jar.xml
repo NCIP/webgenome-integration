@@ -41,5 +41,5 @@
 
 
     </enterprise-beans>
-     <ejb-client-jar>CopyNumberClient.jar</ejb-client-jar>
+
 </ejb-jar>
