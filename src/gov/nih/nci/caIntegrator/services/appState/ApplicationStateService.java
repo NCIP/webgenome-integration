@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.security.SecureRandom;
 
 /**
- * @author: Ram Bhattaru
+ * @author: Ram Bhattaru with credits to sg & lrs
  * @Date: Sep 16, 2005
  */
 
