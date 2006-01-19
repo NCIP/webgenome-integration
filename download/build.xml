@@ -1,5 +1,5 @@
 <project name="WebGenomeIntegration" default="buildAll" basedir=".">
-    <property file="buildWGI.properties"/>
+    <property file="build.properties"/>
    <!--
 	TARGET: JAR 
 		Jar webGenome service without anthill dependencies
@@ -41,22 +41,6 @@
         </javac>
     </target>
 
-    <!-- jar webGenome service -->
-    <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
-        <delete file="${build.dir}\${project.jar.name}.jar"/>
-        <antcall target="config-jndi"/>
-        <jar destfile="${build.dir}\${project.jar.name}.jar" duplicate="preserve">
-              <manifest>
-                <attribute name="Created-By" value="Ant"/>
-                <attribute name="Manifest-Version" value="1.0"/>
-              </manifest>
-              <zipfileset dir="${build.classes.dir}" prefix="">
-              </zipfileset>
-              <zipfileset file="${webGenome.root}/META-INF/ejb-jar.xml" prefix="META-INF"/>
-              <zipfileset file="${webGenome.root}/META-INF/jboss.xml" prefix="META-INF"/>
-              <zipfileset file="${webGenome.root}/META-INF/jbosscmp-jdbc.xml" prefix="META-INF"/>
-        </jar>
-    </target>
 
     <!-- compile Rembrandt (caIntegrator) code -->
     <target name="compile-rbt" depends="build-spec">

@@ -15,6 +15,7 @@
      	<delete file="${module_name}.zip"/>
 	     <zip destfile="${module_name}.zip">
 			 <zipfileset dir="${build.source.dir}" prefix="${project_name}/${module_name}/${build.source.dir}"/>
+			 <zipfileset dir="META-INF" prefix="${project_name}/${module_name}/META-INF"/>
 			 <zipfileset dir="${build.lib.dir}" prefix="${project_name}/${module_name}/${build.lib.dir}">
 			 	<include name="*.jar"/>
 			 </zipfileset>
