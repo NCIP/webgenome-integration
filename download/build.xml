@@ -1,4 +1,6 @@
 <project name="WebGenomeIntegration" default="buildAll" basedir=".">
+	<!-- move to parent dir -->
+	<property name="checkoutDir" value="./.."/>
     <property file="build.properties"/>
    <!--
 	TARGET: JAR 
@@ -43,20 +45,12 @@
 
 
     <!-- compile Rembrandt (caIntegrator) code -->
-    <target name="compile-rbt" depends="build-spec">
+    <target name="compile-rbt">
         <delete dir="${rbt.build.classes.dir}"/>
         <mkdir dir="${rbt.build.classes.dir}" />
         <javac srcdir="${rbt.source.dir}" destdir="${rbt.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
              <classpath>
-                    <!-- 1. include dependencies (analysis-commons.jar and caintegrator-spec.jar) -->
-                    <fileset dir="${analysis-commons.build.dir}">
-                        <include name="${analysis-commons.app.jar.name}.jar"/>
-                    </fileset>
-                    <fileset dir="${spec.build.dir}">
-                        <include name="${spec.app.jar.name}.jar"/>
-                    </fileset>
-
-                    <!-- 2. include rembrandt classes and deployable jars themseleves -->
+                    <!-- include rembrandt classes and deployable jars themseleves -->
                     <fileset dir="${rbt.source.lib.dir}">
                         <include name="*.jar"/>
                     </fileset>

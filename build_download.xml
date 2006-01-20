@@ -32,7 +32,7 @@
 	-->
 	<target name="build_zip_file_anthill" depends="build_zip_file">
 		<zip destfile="${module_name}.zip" update="true">
-			 <zipfileset dir="${anthill.dependency.artifacts.dir}" prefix="${project_name}/${module_name}/${build.deploy.lib.dir}">
+			 <zipfileset dir="${anthill.dependency.artifacts.dir}" prefix="${project_name}/${module_name}/${build.lib.dir}">
 			 	<include name="caintegrator-analysis-commons.jar"/>
 			 	<include name="caintegrator-spec.jar"/>
 			 </zipfileset>
