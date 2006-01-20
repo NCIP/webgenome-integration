@@ -6,9 +6,9 @@
 	-->
     <!-- jar webGenome service -->
     <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
-        <delete file="${build.dir}\${service.jar.name}.jar"/>
+        <delete file="${build.dir}\${project.jar.name}.jar"/>
         <antcall target="config-jndi"/>
-        <jar destfile="${build.dir}\${service.jar.name}.jar" duplicate="preserve">
+        <jar destfile="${build.dir}\${project.jar.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -141,8 +141,8 @@
 
     <!-- put the final service together -->
      <target name="assemble-service" depends="build-rbt, build-webGenomeData-service">
-         <delete file="${checkoutDir}\${service.jar.name}.jar"/>
-         <jar destfile="${checkoutDir}\${service.jar.name}.jar" duplicate="preserve">
+         <delete file="${webGenome.root}\${service.jar.name}.jar"/>
+         <jar destfile="${webGenome.root}\${service.jar.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
