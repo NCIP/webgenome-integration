@@ -8,7 +8,7 @@
 	-->
     <!-- jar webGenome service -->
     <target name="build-webGenomeData-service" depends="compileWebGenomeSrv">
-        <delete file="${build.dir}\${project.jar.name}.jar"/>
+        <delete file="${build.dir}\${project.jar.name}.jar" failonerror="false"/>
         <antcall target="config-jndi"/>
         <jar destfile="${build.dir}\${project.jar.name}.jar" duplicate="preserve">
               <manifest>
@@ -32,8 +32,8 @@
                 <fileset dir="${rbt.build.dir}">
                     <include name="${rbt.app.jar.name}.jar"/>
                 </fileset>
-                 <fileset dir="${spec.build.dir}">
-                    <include name="${spec.app.jar.name}.jar"/>
+                 <fileset dir="${webGenome.source.lib.dir}">
+                  <include name="caintegrator-spec.jar"/>
                 </fileset>
                 <fileset dir="${webGenome.source.lib.dir}">
                     <include name="jboss-j2ee.jar"/>
@@ -79,63 +79,11 @@
     </target>
 
 
-    <!-- build analysis-commons project as a jar file -->
-    <target name="build-analysis-commons">
-        <delete dir="${analysis-commons.build.classes.dir}"/>
-		<mkdir dir="${analysis-commons.build.classes.dir}" />
-		<javac srcdir="${analysis-commons.source.dir}" destdir="${analysis-commons.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
-             <classpath>
-                  <fileset dir="${analysis-commons.source.lib.dir}">
-                        <include name="*.jar"/>
-                  </fileset>
-             </classpath>
-		</javac>
-        <delete file="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar" />
-		<jar jarfile="${analysis-commons.build.dir}\${analysis-commons.app.jar.name}.jar">
-              		<fileset dir="${analysis-commons.build.classes.dir}"></fileset>
-         	</jar>
-    </target>
-
-
-    <!-- build caintegrator-spec project as a jar file -->
-    <target name="build-spec" depends="build-analysis-commons">
-
-        <!-- 1. compile caintegrator-spec source code -->
-        <delete dir="${spec.build.classes.dir}"/>
-		<mkdir dir="${spec.build.classes.dir}" />
-		<javac srcdir="${spec.source.dir}" destdir="${spec.build.classes.dir}" source="1.5" excludes="**/test/**" debug="true" debuglevel="lines,vars,source">
-             <classpath>
-                 <!-- a. include dependencies (caintegrator-spec.jar -->
-                 <fileset dir="${analysis-commons.build.dir}">
-                     <include name="${analysis-commons.app.jar.name}.jar"/>
-                 </fileset>
-
-                 <!-- b. include required  caintegrator-spec library jars-->
-                 <fileset dir="${spec.source.lib.dir}">
-                        <include name="*.jar"/>
-                  </fileset>
-                  <fileset dir="${spec.source.nondeploy.lib.dir}">
-                        <include name="*.jar"/>
-                  </fileset>
-
-             </classpath>
-		</javac>
-
-        <!-- 2. make a caintegrator-spec jar file -->
-        <delete file="${spec.build.dir}\${spec.app.jar.name}.jar" />
-		<jar jarfile="${spec.build.dir}\${spec.app.jar.name}.jar">
-              <fileset dir="${spec.build.classes.dir}"></fileset>
-               <fileset dir="${spec.source.lib.dir}">
-                   <include name="*.jar"/>
-               </fileset>
-         </jar>
-    </target>
-
 
 
     <!-- put the final service together -->
      <target name="assemble-service" depends="build-rbt, build-webGenomeData-service">
-         <delete file="${webGenome.root}\${service.jar.name}.jar"/>
+         <delete file="${webGenome.root}\${service.jar.name}.jar" failonerror="false"/>
          <jar destfile="${webGenome.root}\${service.jar.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
@@ -161,13 +109,13 @@
              </fileset>
 
              <!-- 3. include caintegrator-spec code base -->
-             <fileset dir="${spec.build.dir}">
-                  <include name="${spec.app.jar.name}.jar"/>
+             <fileset dir="${webGenome.source.lib.dir}">
+                  <include name="caintegrator-spec.jar"/>
              </fileset>
 
              <!-- 4. include analysis-commons code base -->
-             <fileset dir="${analysis-commons.build.dir}">
-                  <include name="${analysis-commons.app.jar.name}.jar"/>
+             <fileset dir="${webGenome.source.lib.dir}">
+                  <include name="caintegrator-analysis-commons.jar"/>
              </fileset>
 
              <!-- 5. include ejbs -->
@@ -200,7 +148,7 @@
 
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv">
-            <delete file="${build.dir}\appStateClient.jar"/>
+            <delete file="${build.dir}\appStateClient.jar" failonerror="false"/>
             <jar jarfile="${build.dir}\appStateClient.jar">
                 <fileset dir="${build.classes.dir}">
                             <include name="**/appState/dto/*.class"/>
@@ -213,7 +161,7 @@
             </jar>
      </target>
      <target name="buildWebGenomeClient" depends="compileWebGenomeSrv">
-            <delete file="${build.dir}\webGenomeClientEJB.jar"/>
+            <delete file="${build.dir}\webGenomeClientEJB.jar" failonerror="false"/>
             <jar jarfile="${build.dir}\webGenomeClientEJB.jar">
                 <fileset dir="${build.classes.dir}">
                       <include name="**/rti/webgenome/client/*.class"/>
