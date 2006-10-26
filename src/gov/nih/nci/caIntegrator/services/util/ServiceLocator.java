@@ -3,6 +3,7 @@ package gov.nih.nci.caIntegrator.services.util;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.CommunicationException;
+import javax.naming.Context;
 import javax.ejb.EJBHome;
 import javax.rmi.PortableRemoteObject;
 import java.util.Map;
@@ -82,7 +83,7 @@ import java.io.IOException;
 public class ServiceLocator {
    private  InitialContext initialContext;
    private Map cache;
-   private String deployment ;
+   private static Properties props;
 
    private static ServiceLocator ONLY_INSTANCE;
 
@@ -153,13 +154,24 @@ public class ServiceLocator {
    public Object relocateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException, Exception {
        // remove old reference so that it can be re-intialized
        cache.remove(jndiName);
-       initializeContext();
+       //initializeContext();
        return locateHome(environment, jndiName, narrowTo);
    }
 
   private ServiceLocator() {
        try {
-           initializeContext();
+           props = new Properties();
+           if (System.getProperty("java.naming.factory.initial") != null)
+                    props.put(Context.INITIAL_CONTEXT_FACTORY,
+                                System.getProperty("java.naming.factory.initial") );
+           if (System.getProperty("webGenomeJndi.url") != null)
+                    props.put(Context.PROVIDER_URL,
+                                System.getProperty("webGenomeJndi.url") );
+           if (System.getProperty("java.naming.factory.url.pkgs") != null)
+                    props.put(Context.URL_PKG_PREFIXES,
+                                System.getProperty("java.naming.factory.url.pkgs"));
+
+           initialContext = new InitialContext(props);
            cache = Collections.synchronizedMap(new HashMap());
        } catch(NamingException ne) {
            ne.printStackTrace();
@@ -217,19 +229,17 @@ public class ServiceLocator {
         }
         return remoteHome;
     }
-    private void initializeContext () throws Exception{
+/*
+    private void initializeContext(Properties props) throws Exception{
 
         try {
             Properties p = System.getProperties();
             InputStream is = ServiceLocator.class.getResourceAsStream("/jndi.properties");
             p.load(is);
-            deployment = p.getProperty("jndi.deployment");
             initialContext = new InitialContext(p);
         } catch(IOException ioe) {
             throw new Exception(ioe);
         }
     }
-    public String getDeployment() {
-          return deployment;
-    }
+*/
 }
