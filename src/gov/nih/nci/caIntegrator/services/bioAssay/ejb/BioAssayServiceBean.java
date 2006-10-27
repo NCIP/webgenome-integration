@@ -94,8 +94,11 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
         org.apache.log4j.Logger.getLogger(BioAssayServiceBean.class);
 
     public void ejbCreate() throws CreateException {
-        ApplicationContext.init();
         logger_.debug("ejbCreate()");
+        ApplicationContext.init();
+        logger_.debug("DATA SOURCE DETAILS: ");
+        logger_.debug(System.getProperty("gov.nih.nci.rembrandt.dbalias"));
+        logger_.debug(System.getProperty("gov.nih.nci.rembrandt.jcd_alias"));
     }
 
     public void ejbRemove() throws javax.ejb.EJBException{

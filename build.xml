@@ -23,9 +23,9 @@
 
     <target name="build-webGenomeData-service_anthill" depends="compileWebGenomeSrv_anthill">
         <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
-        <antcall target="config-jndi"/>
+   <!--     <antcall target="config-jndi"/>
         <antcall target="config-OJB-logging"/>
-        <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
+   -->     <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -70,9 +70,7 @@
           </jar>
      </target>
 
-
-
-     <target name="config-jndi">
+ <!--    <target name="config-jndi">
          <delete file="${webGenome.build.classes.dir}/jndi.properties"/>
          <copy file="${webGenome.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
          <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
@@ -82,7 +80,7 @@
         <delete file="${webGenome.build.classes.dir}/OJB.properties"/>
         <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${webGenome.build.classes.dir}/OJB.properties"/>
         <replaceregexp file = "${webGenome.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
-    </target>
+    </target>-->
 
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv_anthill">
@@ -106,8 +104,24 @@
                       <include name="**/caIntegrator/services/bioAssay/dto/*.class"/>
                       <include name="**/caIntegrator/services/bioAssay/ejb/RBT*.class"/>
                       <include name="**/services/util/ServiceLocator.class"/>
-
-                 </fileset>
+                </fileset>
             </jar>
      </target>
+    <target name="deployEJB" depends="assemble-bioAssayService_anthill">
+        <copy file="${service.bioAssay.name}.jar" todir="${jboss.deploy.dir}"/>
+    </target>
+
+    <target name="configure-WGI-properties-service">
+
+        <echo message="Setting DB Properties"/>
+        <copy file="src/rembrandt.properties" todir="${ncicb.config.directory}"/>
+
+        <echo message="Configuring properties-service.xml"/>
+        <copy file="src/properties-service.xml.template" tofile="${ncicb.config.directory}/properties-service.xml"/>
+        <replaceregexp file="${ncicb.config.directory}/properties-service.xml" match="@WGI_CONFIG_PATH@"
+                              replace="${ncicb.config.directory}" flags="g"/>
+
+    </target>
+
+
 </project>

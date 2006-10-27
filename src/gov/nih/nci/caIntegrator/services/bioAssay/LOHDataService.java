@@ -84,103 +84,12 @@ import gov.nih.nci.caIntegrator.services.bioAssay.dto.ReporterDTOImpl;
  * LOH data
 */
 
-public class LOHDataService implements BioAssayService{
-  private static org.apache.log4j.Logger logger_ =
-     org.apache.log4j.Logger.getLogger(CopyNumberDataService .class);
+public class LOHDataService extends GenomicDataService {
 
- /**
-   *  This method retrieves BioAssay data for bioAssay IDs passed in.  It will also mark the selected
-   *  based on the parameters passed in
-   * @param bioAssayIds IDs of the BioAssays to be retrieved
-   * @param constraints Search criteria for BioAssays to be retrieved
-   * @param selectedReporters Selected reporters in the application (Rembrandt Report)
-   * @param clientID Used for retrieving earlier saved application state
-   * @return Returns the retrieved BioAssay data as an array of BioAssayDTO
-   * @throws Exception
-   */
+    private static org.apache.log4j.Logger logger_ =
+        org.apache.log4j.Logger.getLogger(LOHDataService.class);
 
-    public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters, String clientID) throws Exception {
-
-      logger_.debug("RECEIVED REQUEST FOR BIOASSAYS: " + bioAssayIds.length );
-
-      // 1. parse the constraints object and build corresponding ComparativeGenomicQuery
-      ComparativeGenomicQuery q = null; //TODO
-      //ComparativeGenomicQuery q = buildCopyNumberQuery(constraints, bioAssayIds);
-
-     // 2. execute the actual Query
-      long t0 = System.currentTimeMillis();
-      ResultSet[] cghObjects = QueryProcessor.execute(q);
-      long t1 = System.currentTimeMillis();
-      Double t = (t1-t0)/(1000 * 60.0);
-      logger_.debug("\n****************************************************");
-      logger_.debug("TIME TAKEN TO PROCESS CLIENT: "+ clientID +  " THE DB QUERY (in min): " +  t );
-      logger_.debug("TOTAL NUMBER OF BIOASSAYDATUMS RETRIEVED FOR CLIENT:"+ clientID +  ": "+ cghObjects.length);
-
-      // 3. now format result objects
-      /* 3.1. Store CopyNuber result objects per sampleID
-              as a collection of CopyNumber objects using sampleID as key
-      */
-      HashMap<String, Collection<CopyNumber>> h = new HashMap<String, Collection<CopyNumber>>();
-       //groupCopyNumberObjsPerSample(cghObjects, h); TODO
-      //groupCopyNumberObjsPerSample(cghObjects, h);
-
-      //  3.2 format BioAssayDatumDTO objects from results
-      BioAssayDTOImpl[] bioAssayDTOs = new BioAssayDTOImpl[h.size()];
-      Iterator bioAssayIDsIter = h.keySet().iterator();
-      int assayIndex = 0;
-      while (bioAssayIDsIter.hasNext()) {
-          // for each bioSampleID, create a BioAssayDTO object
-          BioAssayDTOImpl bioAssayDTO = new BioAssayDTOImpl();
-          bioAssayDTO.setQuantitationType(QuantitationTypes.COPY_NUMBER);
-          String bioAssayID = (String) bioAssayIDsIter.next();
-          bioAssayDTO.setID(bioAssayID);
-          bioAssayDTO.setName(bioAssayID);
-          Collection<CopyNumber> cnCol =  (Collection<CopyNumber>) h.get(bioAssayID);
-
-          // create BioAssayDatumDTOImpl[] objects for this bioAssay object
-          BioAssayDatumDTOImpl[] datumDTOs = new BioAssayDatumDTOImpl[cnCol.size()];
-
-          // populate these BioAssayDatumDTOImpl[] objects from Copy Number objects
-          int datumIndex=0;
-          for (Iterator<CopyNumber> iterator = cnCol.iterator(); iterator.hasNext();) {
-              CopyNumber copyNumber =  iterator.next();
-              String snpProbeName = copyNumber.getSnpProbesetName();
-
-              // create correponding ReporterDTO object
-              ReporterDTOImpl reporterDTO = new ReporterDTOImpl();
-              reporterDTO.setName(snpProbeName);
-              reporterDTO.setSelected(
-                      new Boolean(selectedReporters.contains(snpProbeName)));
-              CopyNumber.SNPAnnotation annot = copyNumber.getAnnotations();
-              if (annot != null ) {
-                  Set geneSymbols = annot.getGeneSymbols();
-                  if (geneSymbols != null) {
-                      String[] genes = new String[geneSymbols.size()];
-                      genes = (String[]) geneSymbols.toArray(genes);
-                      reporterDTO.setAssociatedGenes(genes);
-                  }
-                  Set accessionsNumbers = annot.getAccessionNumbers();
-                  if (accessionsNumbers != null) {
-                      String[] accessions = new String[accessionsNumbers.size()];
-                      accessions = (String[]) accessionsNumbers.toArray(accessions);
-                      reporterDTO.setAnnotations(accessions);
-                  }
-              }
-              reporterDTO.setChromosome(copyNumber.getChromosome());
-              reporterDTO.setChromosomeLocation(copyNumber.getPhysicalPosition());
-
-              // Now format BioAssayDatumDTO object
-              BioAssayDatumDTOImpl datumImpl = new BioAssayDatumDTOImpl ();
-              datumImpl.setReporter(reporterDTO);
-              //datumImpl.setQuantitationType(QuantitationTypes.COPY_NUMBER);
-              // TODO: confirm with Subha about copyNumber or inverse of copyNumber value
-              datumImpl.setValue(copyNumber.getCopyNumber());
-              datumDTOs[datumIndex++] = datumImpl;
-          }
-          bioAssayDTO.setBioAssayData(datumDTOs);
-          bioAssayDTOs[assayIndex++] = bioAssayDTO;
-      }
-      return bioAssayDTOs;
-
+    protected String getQuantitationType() {
+        return QuantitationTypes.LOH;
     }
 }
