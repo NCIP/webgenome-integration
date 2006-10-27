@@ -71,6 +71,6 @@ import java.io.Serializable;
 
 public interface BioAssayDatumDTO extends Serializable {
     public Double getValue();
-    public String getQuantitationType();
+   // public String getQuantitationType();
     public ReporterDTO getReporter();
 }

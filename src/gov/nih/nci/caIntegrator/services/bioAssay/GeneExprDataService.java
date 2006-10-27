@@ -75,10 +75,10 @@ import java.util.List;
 */
 
 public class GeneExprDataService implements BioAssayService{
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception {
+ /*   public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception {
         return null;
     }
-
+*/
     public BioAssayDTO[] getBioAssays(String[] bioAssayIds, BioAssayDataConstraints constraints, List selectedReporters, String clientID) throws Exception {
         return new BioAssayDTO[0];
     }

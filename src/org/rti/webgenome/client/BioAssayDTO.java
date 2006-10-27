@@ -74,5 +74,6 @@ import java.io.Serializable;
 public interface BioAssayDTO extends Serializable {
     public String getID();
     public String getName();
+    public String getQuantitationType();
     public BioAssayDatumDTO[] getBioAssayData();
 }

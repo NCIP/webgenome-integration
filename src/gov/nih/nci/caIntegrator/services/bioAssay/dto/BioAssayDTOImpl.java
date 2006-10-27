@@ -71,6 +71,15 @@ public class BioAssayDTOImpl implements BioAssayDTO {
     private String ID;
     private String name;
     private BioAssayDatumDTO[] bioAssayData;
+    private String quantitationType;
+
+    public String getQuantitationType() {
+        return quantitationType;
+    }
+
+    public void setQuantitationType(String quantitationType) {
+        this.quantitationType = quantitationType;
+    }
 
     public String getID() {
         return ID;

@@ -7,19 +7,20 @@ import gov.nih.nci.caIntegrator.services.bioAssay.dto.BioAssayDTOImpl;
 import gov.nih.nci.caIntegrator.services.bioAssay.dto.BioAssayDatumDTOImpl;
 import gov.nih.nci.caIntegrator.services.bioAssay.dto.ReporterDTOImpl;
 import gov.nih.nci.rembrandt.dto.query.ComparativeGenomicQuery;
-import gov.nih.nci.rembrandt.queryservice.resultset.ResultSet;
 import gov.nih.nci.rembrandt.queryservice.queryprocessing.QueryProcessor;
 import gov.nih.nci.rembrandt.queryservice.queryprocessing.cgh.CopyNumber;
 import gov.nih.nci.rembrandt.queryservice.QueryManager;
+import gov.nih.nci.rembrandt.queryservice.resultset.ResultSet;
+import gov.nih.nci.caintegrator.dto.query.QueryType;
+import gov.nih.nci.caintegrator.dto.critieria.RegionCriteria;
 import gov.nih.nci.caintegrator.dto.critieria.SampleCriteria;
 import gov.nih.nci.caintegrator.dto.critieria.AssayPlatformCriteria;
 import gov.nih.nci.caintegrator.dto.critieria.Constants;
-import gov.nih.nci.caintegrator.dto.critieria.RegionCriteria;
+import gov.nih.nci.caintegrator.dto.de.SampleIDDE;
 import gov.nih.nci.caintegrator.dto.de.AssayPlatformDE;
 import gov.nih.nci.caintegrator.dto.de.ChromosomeNumberDE;
 import gov.nih.nci.caintegrator.dto.de.BasePairPositionDE;
-import gov.nih.nci.caintegrator.dto.de.SampleIDDE;
-import gov.nih.nci.caintegrator.dto.query.QueryType;
+
 
 import java.util.*;
 
@@ -114,6 +115,24 @@ public class CopyNumberDataService implements BioAssayService{
 
         // 2. execute the actual Query
         long t0 = System.currentTimeMillis();
+
+        logger_.debug(" EXECUTING QUERY USING DB PROPERTIES: ");
+
+        String dbalias = System.getProperty("gov.nih.nci.rembrandt.dbalias");
+        String username = System.getProperty("gov.nih.nci.rembrandt.db.username");
+        String password = System.getProperty("gov.nih.nci.rembrandt.db.password");
+        String jcdalias = System.getProperty("gov.nih.nci.rembrandt.jcd_alias");
+
+/*
+        logger_.debug("DBALIAS: " + dbalias);
+        logger_.debug("USERNAME: " + username);
+        logger_.debug("PASSWORD: " + password);
+        logger_.debug("JCDALIAS: " + jcdalias);
+
+
+
+*/
+
         ResultSet[] cghObjects = QueryProcessor.execute(q);
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);
@@ -135,6 +154,7 @@ public class CopyNumberDataService implements BioAssayService{
         while (bioAssayIDsIter.hasNext()) {
             // for each bioSampleID, create a BioAssayDTO object
             BioAssayDTOImpl bioAssayDTO = new BioAssayDTOImpl();
+            bioAssayDTO.setQuantitationType(QuantitationTypes.COPY_NUMBER);
             String bioAssayID = (String) bioAssayIDsIter.next();
             bioAssayDTO.setID(bioAssayID);
             bioAssayDTO.setName(bioAssayID);
@@ -175,7 +195,7 @@ public class CopyNumberDataService implements BioAssayService{
                 // Now format BioAssayDatumDTO object
                 BioAssayDatumDTOImpl datumImpl = new BioAssayDatumDTOImpl ();
                 datumImpl.setReporter(reporterDTO);
-                datumImpl.setQuantitationType(QuantitationTypes.COPY_NUMBER);
+                //datumImpl.setQuantitationType(QuantitationTypes.COPY_NUMBER);
                 // TODO: confirm with Subha about copyNumber or inverse of copyNumber value
                 datumImpl.setValue(copyNumber.getCopyNumber());
                 datumDTOs[datumIndex++] = datumImpl;
@@ -266,18 +286,4 @@ public class CopyNumberDataService implements BioAssayService{
             copyNumberCol.add(cghObject);
         }
     }
-
-    /**
-     * This method retrieves BioAssay data for bioAssay ID passed in.  It will also mark the selected
-     *  based on the parameters passed in
-     * @param bioAssayId ID of the BioAssay to be retrieved
-     * @param selectedReporters Selected reporters in the application (Rembrandt Report)
-     * @param clientID Used for retrieving earlier saved application state
-     * @return Returns the retrieved BioAssay data as BioAssayDTO
-     * @throws Exception
-    */
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception{
-        return (getBioAssays(new String[]{bioAssayId}, null, selectedReporters, clientID))[0];
-    }
-
 }

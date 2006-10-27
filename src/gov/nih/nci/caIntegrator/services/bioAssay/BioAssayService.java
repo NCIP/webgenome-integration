@@ -78,7 +78,7 @@ public interface BioAssayService {
      * @return Returns the retrieved BioAssay data as BioAssayDTO
      * @throws Exception
     */
-    public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception;
+   // public BioAssayDTO getBioAssay(String bioAssayId, List selectedReporters, String clientID) throws Exception;
 
 
     /**

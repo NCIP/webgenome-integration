@@ -68,7 +68,7 @@ import org.rti.webgenome.client.ReporterDTO;
 
 public class BioAssayDatumDTOImpl implements BioAssayDatumDTO {
     private Double value;
-    private String quantitationType;
+    //private String quantitationType;
     private ReporterDTO reporter;
 
     public Double getValue() {
@@ -79,6 +79,7 @@ public class BioAssayDatumDTOImpl implements BioAssayDatumDTO {
         this.value = value;
     }
 
+/*
     public String getQuantitationType() {
         return quantitationType;
     }
@@ -86,6 +87,7 @@ public class BioAssayDatumDTOImpl implements BioAssayDatumDTO {
     public void setQuantitationType(String quantitationType) {
         this.quantitationType = quantitationType;
     }
+*/
 
     public ReporterDTO getReporter() {
         return reporter;
