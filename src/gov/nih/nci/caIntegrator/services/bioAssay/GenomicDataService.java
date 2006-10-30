@@ -34,6 +34,7 @@ abstract public class GenomicDataService implements BioAssayService{
         org.apache.log4j.Logger.getLogger(GenomicDataService .class);
 
      protected abstract String getQuantitationType();
+     protected abstract Double getDatumValue(CopyNumber cpObj);
 
     /**
       *  This method retrieves BioAssay data for bioAssay IDs passed in.  It will also mark the selected
@@ -135,12 +136,14 @@ abstract public class GenomicDataService implements BioAssayService{
                 // Now format BioAssayDatumDTO object
                 BioAssayDatumDTOImpl datumImpl = new BioAssayDatumDTOImpl ();
                 datumImpl.setReporter(reporterDTO);
-                Double datumValue = null;
+                Double datumValue = getDatumValue(copyNumber);
+/*
                 if (quantitationType.equals(QuantitationTypes.COPY_NUMBER))
                     datumValue = copyNumber.getCopyNumber();
                 else if (quantitationType.equals(QuantitationTypes.LOH))
                     datumValue = copyNumber.getLoh();
                 else throw new Exception("Unsupported Quantitation: " + quantitationType );
+*/
                 datumImpl.setValue(datumValue);
                 datumDTOs[datumIndex++] = datumImpl;
             }

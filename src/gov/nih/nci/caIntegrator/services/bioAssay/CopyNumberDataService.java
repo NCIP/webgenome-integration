@@ -97,6 +97,10 @@ public class CopyNumberDataService extends GenomicDataService {
     private static org.apache.log4j.Logger logger_ =
         org.apache.log4j.Logger.getLogger(CopyNumberDataService .class);
 
+    protected Double getDatumValue(CopyNumber cpObj) {
+        return cpObj.getCopyNumber();  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     protected String getQuantitationType() {
         return QuantitationTypes.COPY_NUMBER;
     }

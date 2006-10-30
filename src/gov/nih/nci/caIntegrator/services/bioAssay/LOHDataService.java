@@ -92,4 +92,8 @@ public class LOHDataService extends GenomicDataService {
     protected String getQuantitationType() {
         return QuantitationTypes.LOH;
     }
+
+    protected Double getDatumValue(CopyNumber cpObj) {
+        return cpObj.getLoh();
+    }
 }
