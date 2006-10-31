@@ -6,12 +6,10 @@ import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.ejb.EJBHome;
 import javax.rmi.PortableRemoteObject;
-import java.util.Map;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
 
 /**
  * @author Ram Bhattaru
@@ -161,17 +159,19 @@ public class ServiceLocator {
   private ServiceLocator() {
        try {
            props = new Properties();
-           if (System.getProperty("java.naming.factory.initial") != null)
-                    props.put(Context.INITIAL_CONTEXT_FACTORY,
-                                System.getProperty("java.naming.factory.initial") );
-           if (System.getProperty("webGenomeJndi.url") != null)
-                    props.put(Context.PROVIDER_URL,
-                                System.getProperty("webGenomeJndi.url") );
-           if (System.getProperty("java.naming.factory.url.pkgs") != null)
-                    props.put(Context.URL_PKG_PREFIXES,
-                                System.getProperty("java.naming.factory.url.pkgs"));
+           Properties p = new Properties();
+           String propertiesFileName = System.getProperty("gov.nih.nci.rembrandt.propertiesFile");
+           FileInputStream in = new FileInputStream(propertiesFileName);
+		   p.load(in);
 
-           initialContext = new InitialContext(props);
+           System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                                "org.jnp.interfaces.NamingContextFactory" );
+           System.setProperty(Context.PROVIDER_URL,
+                     p.getProperty("webGenomeJndi.url"));
+           System.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
+                                //"org.jboss.naming:org.jnp.interfaces");*/
+
+           initialContext = new InitialContext();
            cache = Collections.synchronizedMap(new HashMap());
        } catch(NamingException ne) {
            ne.printStackTrace();
