@@ -107,21 +107,4 @@
                 </fileset>
             </jar>
      </target>
-    <target name="deployEJB" depends="assemble-bioAssayService_anthill">
-        <copy file="${service.bioAssay.name}.jar" todir="${jboss.deploy.dir}"/>
-    </target>
-
-    <target name="configure-WGI-properties-service">
-
-        <echo message="Setting DB Properties"/>
-        <copy file="src/rembrandt.properties" todir="${ncicb.config.directory}"/>
-
-        <echo message="Configuring properties-service.xml"/>
-        <copy file="src/properties-service.xml.template" tofile="${ncicb.config.directory}/properties-service.xml"/>
-        <replaceregexp file="${ncicb.config.directory}/properties-service.xml" match="@WGI_CONFIG_PATH@"
-                              replace="${ncicb.config.directory}" flags="g"/>
-
-    </target>
-
-
 </project>
