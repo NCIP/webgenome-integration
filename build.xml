@@ -70,18 +70,6 @@
           </jar>
      </target>
 
- <!--    <target name="config-jndi">
-         <delete file="${webGenome.build.classes.dir}/jndi.properties"/>
-         <copy file="${webGenome.source.dir}/jndi.properties.template" tofile="${webGenome.build.classes.dir}/jndi.properties"/>
-         <replaceregexp file = "${webGenome.build.classes.dir}/jndi.properties" match="@JNDI-URL@" replace="${webGenomeJndi.url}" flags="g"/>
-     </target>
-
-   <target name="config-OJB-logging">
-        <delete file="${webGenome.build.classes.dir}/OJB.properties"/>
-        <copy file="${webGenome.source.dir}/OJB.properties.template" tofile="${webGenome.build.classes.dir}/OJB.properties"/>
-        <replaceregexp file = "${webGenome.build.classes.dir}/OJB.properties" match="@LOGGER-CONFIG-FILE@" replace="${webGenome.logfile.url}" flags="g"/>
-    </target>-->
-
 
     <target name="buildAppStateClient" depends="compileWebGenomeSrv_anthill">
             <delete file="${webGenome.build.dir}\appStateClient.jar"/>
