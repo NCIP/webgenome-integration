@@ -54,7 +54,7 @@
          <delete file="${service.bioAssay.name}.jar"/>
          <jar destfile="${service.bioAssay.name}.jar" duplicate="preserve">
               <manifest>
-                <attribute name="Class-Path" value="commons-collections.jar commons-dbcp.jar commons-lang-2.0.jar commons-pool.jar db-ojb-1.0.rc7.jar jcs.jar jdo.jar jdori.jar oracle.jar RBT.jar"/>
+                <!-- <attribute name="Class-Path" value="commons-collections-3.1.jar commons-dbcp.jar commons-lang-2.0.jar commons-pool.jar db-ojb-1.0.rc7.jar jcs.jar jdo.jar jdori.jar oracle.jar"/> -->
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
               </manifest>
