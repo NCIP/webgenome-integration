@@ -71,7 +71,6 @@ import java.io.Serializable;
 
 public class RBTReportStateDTO implements TrackableAppState, Serializable {
 
-    // store groupName as String and associatedSamples as String Array
     HashMap groups;
     String userID;
     List selectedReporerNames;
