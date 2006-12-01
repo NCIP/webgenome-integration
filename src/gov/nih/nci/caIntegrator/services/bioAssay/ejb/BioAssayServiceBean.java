@@ -128,9 +128,11 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
 
         logger_.debug("\n\n\n\n*********** BEGIN  NEW EXPERIMENT (" + experimentID +
                 ") REQUEST FOR: " + clientID + "********");
+
         String message = "Received Request for experiment ID:{0} from client ID: {1}";
         String logMessage = MessageFormat.format(message, new Object[] {experimentID, clientID});
         logger_.debug(logMessage);
+
         String serviceType = assayDataConstraints.getQuantitationType();
         createServiceType(serviceType);
         assert (service != null);

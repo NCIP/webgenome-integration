@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.security.SecureRandom;
 
 /**
- * @author Ram Bhattaru with credits to sg & lrs
+ * @author Ram Bhattaru
  */
 
 /**
@@ -152,12 +152,13 @@ final public class ApplicationStateService {
      * @return Returns genrated ID
     */
     synchronized public static Integer getNextID() {
-        // TODO:  come up with a better algorithm to generate this ID
+
         //generate a random number using SecureRandom
         SecureRandom prng = new java.security.SecureRandom();
         Integer id = new Integer(prng.nextInt());
         if (id < 0) id *= -1;
         return id;
+
     }
 
 

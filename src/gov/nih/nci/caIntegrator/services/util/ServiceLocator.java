@@ -160,7 +160,7 @@ public class ServiceLocator {
        try {
            props = new Properties();
            Properties p = new Properties();
-           String propertiesFileName = System.getProperty("gov.nih.nci.rembrandt.propertiesFile");
+           String propertiesFileName = System.getProperty("gov.nih.nci.rembrandt.properties");
            FileInputStream in = new FileInputStream(propertiesFileName);
 		   p.load(in);
 
