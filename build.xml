@@ -25,7 +25,8 @@
         <delete file="${webGenome.build.dir}\${service.rbt.name}.jar"/>
    <!--     <antcall target="config-jndi"/>
         <antcall target="config-OJB-logging"/>
-   -->     <jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
+   -->     
+    	<jar destfile="${webGenome.build.dir}\${service.rbt.name}.jar" duplicate="preserve">
               <manifest>
                 <attribute name="Created-By" value="Ant"/>
                 <attribute name="Manifest-Version" value="1.0"/>
