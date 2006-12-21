@@ -1,18 +1,18 @@
 package gov.nih.nci.caIntegrator.services.demo;
 
 import gov.nih.nci.caIntegrator.services.bioAssay.ejb.AbstractServiceBean;
-import gov.nih.nci.rembrandt.dto.query.ComparativeGenomicQuery;
-import gov.nih.nci.rembrandt.queryservice.QueryManager;
-import gov.nih.nci.rembrandt.queryservice.resultset.ResultSet;
-import gov.nih.nci.rembrandt.queryservice.queryprocessing.QueryProcessor;
-import gov.nih.nci.rembrandt.queryservice.queryprocessing.cgh.CopyNumber;
-import gov.nih.nci.rembrandt.util.ApplicationContext;
-import gov.nih.nci.caintegrator.dto.query.QueryType;
-import gov.nih.nci.caintegrator.dto.critieria.GeneIDCriteria;
 import gov.nih.nci.caintegrator.dto.critieria.AssayPlatformCriteria;
 import gov.nih.nci.caintegrator.dto.critieria.Constants;
-import gov.nih.nci.caintegrator.dto.de.GeneIdentifierDE;
+import gov.nih.nci.caintegrator.dto.critieria.GeneIDCriteria;
 import gov.nih.nci.caintegrator.dto.de.AssayPlatformDE;
+import gov.nih.nci.caintegrator.dto.de.GeneIdentifierDE;
+import gov.nih.nci.caintegrator.dto.query.QueryType;
+import gov.nih.nci.rembrandt.dto.query.ComparativeGenomicQuery;
+import gov.nih.nci.rembrandt.queryservice.QueryManager;
+import gov.nih.nci.rembrandt.queryservice.queryprocessing.QueryProcessor;
+import gov.nih.nci.rembrandt.queryservice.queryprocessing.cgh.CopyNumber;
+import gov.nih.nci.rembrandt.queryservice.resultset.ResultSet;
+import gov.nih.nci.rembrandt.util.WGIContext;
 
 import javax.ejb.CreateException;
 
@@ -94,7 +94,7 @@ public class CopyNumberMgrBean extends AbstractServiceBean {
 
     public void ejbCreate() throws CreateException {
            //TODO: FIx this
-        ApplicationContext.init();
+        WGIContext.init();
         logger_.debug("ejbCreate()");
     }
 

@@ -1,24 +1,29 @@
 package gov.nih.nci.caIntegrator.services.bioAssay.ejb;
 
-import org.rti.webgenome.client.*;
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTracker;
+import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTrackerHome;
+import gov.nih.nci.caIntegrator.services.appState.dto.RBTReportStateDTO;
+import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome;
+import gov.nih.nci.caIntegrator.services.bioAssay.BioAssayService;
+import gov.nih.nci.caIntegrator.services.bioAssay.CopyNumberDataService;
+import gov.nih.nci.caIntegrator.services.bioAssay.GeneExprDataService;
+import gov.nih.nci.caIntegrator.services.bioAssay.LOHDataService;
+import gov.nih.nci.caIntegrator.services.bioAssay.dto.ExperimentDTOImpl;
+import gov.nih.nci.caIntegrator.services.util.ServiceLocator;
+import gov.nih.nci.rembrandt.util.WGIContext;
+
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.ejb.CreateException;
 import javax.naming.NamingException;
 
-import gov.nih.nci.caIntegrator.services.bioAssay.dto.ExperimentDTOImpl;
-import gov.nih.nci.caIntegrator.services.bioAssay.BioAssayService;
-import gov.nih.nci.caIntegrator.services.bioAssay.GeneExprDataService;
-import gov.nih.nci.caIntegrator.services.bioAssay.*;
-import gov.nih.nci.caIntegrator.services.bioAssay.LOHDataService;
-import gov.nih.nci.caIntegrator.services.util.ServiceLocator;
-import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome;
-import gov.nih.nci.caIntegrator.services.appState.dto.RBTReportStateDTO;
-import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTrackerHome;
-import gov.nih.nci.caIntegrator.services.appState.ApplicationStateTracker;
-import gov.nih.nci.rembrandt.util.ApplicationContext;
-
-import java.util.HashMap;
-import java.util.List;
-import java.text.MessageFormat;
+import org.rti.webgenome.client.BioAssayDTO;
+import org.rti.webgenome.client.BioAssayDataConstraints;
+import org.rti.webgenome.client.BioAssayMgr;
+import org.rti.webgenome.client.ExperimentDTO;
+import org.rti.webgenome.client.QuantitationTypes;
 
 /**
  * @author Ram Bhattaru
@@ -95,10 +100,10 @@ public class BioAssayServiceBean extends AbstractServiceBean implements BioAssay
 
     public void ejbCreate() throws CreateException {
         logger_.debug("ejbCreate()");
-        ApplicationContext.init();
+        WGIContext.init();
         logger_.debug("DATA SOURCE DETAILS: ");
-        logger_.debug(System.getProperty("gov.nih.nci.rembrandt.dbalias"));
-        logger_.debug(System.getProperty("gov.nih.nci.rembrandt.jcd_alias"));
+        logger_.debug(System.getProperty("gov.nih.nci.wgi.dbalias"));
+        logger_.debug(System.getProperty("gov.nih.nci.wgi.jcd_alias"));
     }
 
     public void ejbRemove() throws javax.ejb.EJBException{

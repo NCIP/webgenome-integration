@@ -57,23 +57,6 @@ abstract public class GenomicDataService implements BioAssayService{
         // 2. execute the actual Query
         long t0 = System.currentTimeMillis();
 
-/*      GenomicDataService.logger_.debug(" EXECUTING QUERY USING DB PROPERTIES: ");
-
-        String dbalias = System.getProperty("gov.nih.nci.rembrandt.dbalias");
-        String username = System.getProperty("gov.nih.nci.rembrandt.db.username");
-        String password = System.getProperty("gov.nih.nci.rembrandt.db.password");
-        String jcdalias = System.getProperty("gov.nih.nci.rembrandt.jcd_alias");
-
-
-        logger_.debug("DBALIAS: " + dbalias);
-        logger_.debug("USERNAME: " + username);
-        logger_.debug("PASSWORD: " + password);
-        logger_.debug("JCDALIAS: " + jcdalias);
-
-
-
-*/
-
         ResultSet[] cghObjects = QueryProcessor.execute(q);
         long t1 = System.currentTimeMillis();
         Double t = (t1-t0)/(1000 * 60.0);

@@ -1,5 +1,7 @@
 package gov.nih.nci.caIntegrator.services.util;
 
+import gov.nih.nci.rembrandt.util.WGIContext;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.CommunicationException;
@@ -160,7 +162,7 @@ public class ServiceLocator {
        try {
            props = new Properties();
            Properties p = new Properties();
-           String propertiesFileName = System.getProperty("gov.nih.nci.rembrandt.properties");
+           String propertiesFileName = System.getProperty(WGIContext.GOV_NIH_NCI_WGI_PROPERTIES);
            FileInputStream in = new FileInputStream(propertiesFileName);
 		   p.load(in);
 
