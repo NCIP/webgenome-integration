@@ -165,16 +165,15 @@ public class ServiceLocator {
            String propertiesFileName = System.getProperty(WGIContext.GOV_NIH_NCI_WGI_PROPERTIES);
            FileInputStream in = new FileInputStream(propertiesFileName);
 		   p.load(in);
-
-           System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-                                "org.jnp.interfaces.NamingContextFactory" );
-           System.setProperty(Context.PROVIDER_URL,
-                     p.getProperty("webGenomeJndi.url"));
-           System.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
-                                //"org.jboss.naming:org.jnp.interfaces");*/
-
-           initialContext = new InitialContext();
-           cache = Collections.synchronizedMap(new HashMap());
+		   Hashtable evironment=new Hashtable();
+		    evironment.put(Context.INITIAL_CONTEXT_FACTORY,
+		                       "org.jnp.interfaces.NamingContextFactory" );
+		    evironment.put(Context.PROVIDER_URL,
+		               p.getProperty("webGenomeJndi.url"));
+		    //evironment.put(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
+		                        //"org.jboss.naming:org.jnp.interfaces");*/
+		    initialContext = new InitialContext(evironment);
+            cache = Collections.synchronizedMap(new HashMap());
        } catch(NamingException ne) {
            ne.printStackTrace();
        } catch(Exception e) {
