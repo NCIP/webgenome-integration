@@ -101,6 +101,6 @@
             </jar>
      </target>
 	<target name="retrieve_deployment_artifacts">
-		<copy file="conf/wgi.properties" todir="${anthill.artifacts.dir}"/>
+		<copy file="conf/WGI.properties" todir="${anthill.artifacts.dir}"/>
 	</target>
 </project>
