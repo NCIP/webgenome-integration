@@ -2,16 +2,21 @@ package gov.nih.nci.caIntegrator.services.util;
 
 import gov.nih.nci.rembrandt.util.WGIContext;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.io.FileInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.ejb.EJBHome;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
-import javax.ejb.EJBHome;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
-import java.util.*;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Ram Bhattaru
@@ -81,6 +86,7 @@ import java.io.FileInputStream;
  */
 
 public class ServiceLocator {
+   private static Logger logger = Logger.getLogger(ServiceLocator.class);
    private  InitialContext initialContext;
    private Map cache;
    private static Properties props;
@@ -112,11 +118,21 @@ public class ServiceLocator {
      * @param jndiName  JNDI name of the home interface
      * @param narrowTo class of remote home interface
      * @return Returns the requested Remote Home
+     * @throws NamingException 
      * @throws javax.naming.NamingException
      */
-    public  Object locateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
-         if (environment != null)
-             initialContext = new javax.naming.InitialContext(environment);
+    public  Object locateHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws NamingException  {
+         if (environment != null){
+             try {
+				initialContext = new javax.naming.InitialContext(environment);
+	            logger.debug("Enviornment:"+ environment);
+	            logger.debug("JNDIName:"+ jndiName);
+			} catch (NamingException e) {
+				logger.error(e);
+				throw e;
+			}
+
+         }
          Object objRef ;
          if (cache.containsKey(jndiName)) {
                 objRef  = cache.get(jndiName);
@@ -165,18 +181,20 @@ public class ServiceLocator {
            String propertiesFileName = System.getProperty(WGIContext.GOV_NIH_NCI_WGI_PROPERTIES);
            FileInputStream in = new FileInputStream(propertiesFileName);
 		   p.load(in);
-		   Hashtable evironment=new Hashtable();
-		    evironment.put(Context.INITIAL_CONTEXT_FACTORY,
-		                       "org.jnp.interfaces.NamingContextFactory" );
-		    evironment.put(Context.PROVIDER_URL,
-		               p.getProperty("webGenomeJndi.url"));
-		    //evironment.put(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
-		                        //"org.jboss.naming:org.jnp.interfaces");*/
-		    initialContext = new InitialContext(evironment);
+		    Hashtable env = new Hashtable();
+            env.put(Context.INITIAL_CONTEXT_FACTORY,
+               "org.jnp.interfaces.NamingContextFactory");
+            env.put(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");//"org.jboss.naming:org.jnp.interfaces"
+            env.put(Context.PROVIDER_URL,System.getProperty("webGenomeJndi.url"));
+            //env.put("j2ee.clientName", "WGI-client");
+            initialContext = new InitialContext(env);
+            //Context enc = (Context) initialContext.lookup("java:comp/env");
             cache = Collections.synchronizedMap(new HashMap());
        } catch(NamingException ne) {
+    	   logger.error(ne);
            ne.printStackTrace();
        } catch(Exception e) {
+    	   logger.equals(e);
            e.printStackTrace();
        }
    }
@@ -185,9 +203,10 @@ public class ServiceLocator {
      * Obtain Local home interface from initial context
      * @param jndiHomeName JNDI name of the home interface
      * @return Returns home interface
+     * @throws Exception 
      * @throws Exception
      */
-    public Object getLocalHome(String jndiHomeName) throws Exception{
+    public Object getLocalHome(String jndiHomeName) throws Exception {
         Object localHome = null;
         try {
             if (cache.containsKey(jndiHomeName)) {
@@ -197,9 +216,16 @@ public class ServiceLocator {
                 cache.put(jndiHomeName, localHome);
             }
         }  catch(CommunicationException ce) {
-            localHome = initialContext.lookup(jndiHomeName);
+        	logger.debug(ce);
+            try {
+				localHome = initialContext.lookup(jndiHomeName);
+			} catch (NamingException e) {
+				logger.error(e);
+				e.printStackTrace();
+			}
             cache.put(jndiHomeName, localHome);
         } catch(NamingException ne) {
+        	logger.error(ne);
             ne.printStackTrace();
             throw new Exception(ne);
         }
@@ -225,6 +251,7 @@ public class ServiceLocator {
                 cache.put(jndiHomeName, remoteHome);
             }
         } catch(NamingException ne) {
+        	logger.error(ne);
             ne.printStackTrace();
             throw new Exception(ne);
         }

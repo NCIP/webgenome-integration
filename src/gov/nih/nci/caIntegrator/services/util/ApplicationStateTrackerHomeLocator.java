@@ -1,5 +1,9 @@
 package gov.nih.nci.caIntegrator.services.util;
 
+import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTrackerHome;
 
 /**
@@ -71,23 +75,38 @@ import gov.nih.nci.caIntegrator.services.appState.ejb.RBTApplicationStateTracker
  */
 
 public class ApplicationStateTrackerHomeLocator {
+	private static Logger logger = Logger.getLogger(ApplicationStateTrackerHomeLocator.class);
    /**
     * Cached remote home (EJBHome). Uses lazy loading to obtain its value (loaded by getHome() methods).
    */
    private static RBTApplicationStateTrackerHome cachedRemoteHome = null;
 
-   private static Object lookupHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
-      // Obtain initial context
-      javax.naming.InitialContext initialContext = new javax.naming.InitialContext(environment);
-      try {
+   private static Object lookupHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws NamingException  {
+	   javax.naming.InitialContext initialContext = null;
+	   try{
+           logger.debug("Enviornment:"+ environment);
+           logger.debug("JNDIName:"+ jndiName);
+		   // Obtain initial context
+		   initialContext = new javax.naming.InitialContext(environment);
+
          Object objRef = initialContext.lookup(jndiName);
          // only narrow if necessary
          if (narrowTo.isInstance(java.rmi.Remote.class))
             return javax.rmi.PortableRemoteObject.narrow(objRef, narrowTo);
          else
             return objRef;
-      } finally {
-         initialContext.close();
+	   } catch (NamingException e) {
+		logger.error(e);
+		throw e;
+	}finally {
+         try {
+        	 if(initialContext != null){
+        		 initialContext.close();
+        	 }
+		} catch (NamingException e) {
+			logger.error(e);
+			throw e;
+		}
       }
    }
 
