@@ -204,7 +204,7 @@ abstract public class GenomicDataService implements BioAssayService{
 
         for (int i = 0; i < cghObjects.length; i++) {
             CopyNumber cghObject = (CopyNumber) cghObjects[i];
-            String bioAssayID = cghObject.getSampleId();
+            String bioAssayID = cghObject.getSpecimenName();
 
             // retrieve corresponding copyNumber object collection for this sampleID
             Collection<CopyNumber> copyNumberCol  = h.get(bioAssayID);
