@@ -1,6 +1,8 @@
 Welcome to the WebGenome Integration Project!
 =====================================
 
+WebGenome tool was previously integrated with Rembrandt to visualize chromosomal abnormality data in scatter and ideogram plots. WebGenome plots are supported only on IE browser (6.0 and above) and not on Safari and Firefox.  This integration has been retired as of Rembrandt 1.5.7.
+
 The WebGenome Integration is an Open Source project and it is written in Java.
 
 The WebGenome Integration is distributed under the BSD 3-Clause License.
