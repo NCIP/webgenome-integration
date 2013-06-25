@@ -1,6 +1,0 @@
-(no author) = no_author <no_author@no_author.cvs2svn>
-bhattarr = Ram Bhattaru <bhattarr>
-cvsuser = cvsuser <cvsuser>
-mujus = mujus <mujus>
-root = root <root>
-sahnih = Himanso Sahni <Himanso.Sahni@fda.hhs.gov>
